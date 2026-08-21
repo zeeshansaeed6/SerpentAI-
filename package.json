@@ -1,0 +1,16 @@
+{
+  "name": "snake-species-detection",
+  "version": "1.0.0",
+  "description": "AI-Based Snake Species Detection using MERN Stack & Gemini API",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "kill-ports": "powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue\"",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "seed": "cd server && node data/seedSnakes.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
