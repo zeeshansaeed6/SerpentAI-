@@ -1,101 +1,211 @@
-# 🐍 SerpentAI Ultra — AI Snake Species Detection & Venom Safety Suite
+<div align="center">
 
-[![Stack](https://img.shields.io/badge/Stack-React%20%7C%20Express%20%7C%20Supabase%20(PostgreSQL)%20%7C%20Node.js-10b981?style=for-the-badge)](https://github.com)
-[![Gemini AI](https://img.shields.io/badge/AI-Gemini%203.6%20Flash%20Vision-06b6d4?style=for-the-badge)](https://ai.google.dev)
+# 🐍 SerpentAI
+
+### Snap a snake. Know what it is. Know what to do next.
+
+AI snake identification, venom-safety guidance and a community danger radar, in one fast web app.
+
+[![Live demo](https://img.shields.io/badge/▶_Live_demo-serpentai--g1g1.onrender.com-10b981?style=for-the-badge)](https://serpentai-g1g1.onrender.com)
+[![CI](https://img.shields.io/github/actions/workflow/status/zeeshansaeed6/SerpentAI-/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/zeeshansaeed6/SerpentAI-/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)](LICENSE)
 
-An intelligent, full-stack web platform (React + Express + Supabase/PostgreSQL) powered by **Multimodal Gemini Vision AI** for instant snake species recognition, venom lethality categorization, emergency first-aid protocols, interactive symptom triage, and nearest hospital dispatch.
+![React](https://img.shields.io/badge/React_18-20232a?logo=react&logoColor=61dafb)
+![Vite](https://img.shields.io/badge/Vite-20232a?logo=vite&logoColor=ffd62e)
+![Node](https://img.shields.io/badge/Express-20232a?logo=express&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase_Postgres-20232a?logo=supabase&logoColor=3ecf8e)
+![Gemini](https://img.shields.io/badge/Google_Gemini-20232a?logo=googlegemini&logoColor=8ab4f8)
+![GSAP](https://img.shields.io/badge/GSAP-20232a?logo=greensock&logoColor=88ce02)
+![a11y](https://img.shields.io/badge/axe--core-0_violations-10b981)
+
+<br>
+
+<img src="docs/screenshots/hero.jpg" alt="SerpentAI landing page" width="900">
+
+</div>
+
+> **Heads up:** the live demo runs on a free Render instance, which sleeps when idle. The first visit after a quiet spell can take about 50 seconds to wake up.
 
 ---
 
-## 🌟 Key Features
+## Why this exists
 
-* **🔍 Multimodal AI Species Scanner**:
-  * Real-time snake identification from image uploads and live webcam streams.
-  * **Low-Light / Night-Vision Photo Enhancer** for boosting dark snake encounter photos.
-  * Color-coded hazard rating badges (`Deadly 🚨`, `Dangerous ⚠️`, `Moderate 🟡`, `Harmless 🛡️`).
-  * Text-to-Speech (TTS) audio narration for Latin species pronunciation & first-aid steps.
+Snakebite kills tens of thousands of people a year, and the first minutes matter. Misidentification and old myths (tourniquets, cutting, "sucking out" venom) make bites worse. SerpentAI puts an identification and first-aid assistant in your pocket, with clear safety rules and fast answers.
 
-* **🏥 Auto-Dispatched Antivenom Hospitals**:
-  * Auto-detects user GPS location via browser and calculates real-time distances to verified emergency antivenom centers.
-  * 1-touch Emergency direct dialer and Google Maps driving navigation.
-
-* **💬 SerpentBot AI Herpetologist Chatbot**:
-  * Real-time conversational AI consultant for snake safety, encounter advice, pet protection, and bite first aid.
-
-* **⏱️ Snakebite Symptom Triage & Risk Calculator**:
-  * Clinical evaluation tool comparing 2-fang punctures vs teeth scratches, time elapsed, localized swelling, and whole-body neuro/hemo signs to generate an immediate Envenomation Risk Score.
-
-* **🏡 Snake-Proofing & Farm / Camp Prevention Guide**:
-  * Interactive exclusion checklists and scientifically debunked snake myth-busters (carbolic acid, sulfur, powders).
-
-* **📞 Snake Rescuers & Wildlife Helpline Directory**:
-  * Searchable contacts of certified snake catchers and forest department units for humane rescue and relocation.
-
-* **📡 Community Danger Radar**:
-  * Crowdsourced geo-tagged reptile sighting log with GPS auto-detection to warn nearby hikers and residents.
-  * Interactive world map (bundled geometry, no map-tile service): danger-level markers with distinct shapes, region zoom, drag-to-pan, Ctrl+scroll and +/- zoom, numbered clusters for nearby reports, tooltips, keyboard support, and a danger-level filter that scopes the map and the report list together. The hospital finder shows antivenom centres (and your GPS position) on the same map.
-
-* **📊 Species Insights** (Encyclopedia):
-  * KPI tiles plus ordered/ranked bar charts for danger level, family and venomous split. It follows your search and filters, and has a table view for screen readers.
-
-* **🔀 Side-by-Side Mimic Analyzer**:
-  * Side-by-side comparison of dangerous venomous snakes vs harmless lookalike mimics (e.g. *Coral Snake vs Scarlet Kingsnake*).
-
-* **📄 Exportable Medical Incident PDF**:
-  * Print-ready clinical dossier for ER doctors containing patient details, bite location, timestamp, and antivenom protocol.
+> ⚠️ **SerpentAI is an educational aid, not medical advice.** In an emergency call your local emergency number (911 / 112 / 108) immediately.
 
 ---
 
-## 🏗️ Architecture & Tech Stack
+## ✨ What it does
 
-* **Frontend**: React 18, Vite, Vanilla CSS Design System with Glassmorphism, Lucide Icons, Canvas Confetti.
-* **Backend**: Node.js, Express.js, Multer (Memory Storage), Helmet, CORS.
-* **AI Engine**: Google Gemini Vision (`gemini-3.6-flash`) via `@google/genai`.
-* **Database**: PostgreSQL via [Supabase](https://supabase.com) using the `pg` driver. Tables are created and seeded automatically on first start, with Row Level Security enabled. Local development needs no database: it falls back to an in-memory Postgres (PGlite).
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🔍 AI Species Scanner
+Upload a photo or use the webcam and get, in about 5 seconds:
+- species and scientific name
+- venomous or harmless, with a colour-coded danger rating
+- first-aid protocol, habitat, range, diet, fun fact
+- low-light / night-vision photo enhancer
+- audio narration, shareable result, exportable medical PDF
+
+</td>
+<td width="50%" valign="top">
+
+<img src="docs/screenshots/scan.jpg" alt="Scan result for a corn snake" width="100%">
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+<img src="docs/screenshots/chat.jpg" alt="SerpentBot chat" width="100%">
+
+</td>
+<td width="50%" valign="top">
+
+### 💬 SerpentBot
+An AI herpetologist for snake safety, bite first aid and prevention.
+- short, calm, safety-first answers
+- remembers the conversation, so follow-ups like "how long until it works?" make sense
+- friendly "busy" message and one automatic retry if the AI is slow
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 📡 Danger Radar
+A crowdsourced map of geo-tagged sightings.
+- bundled world map (no tile service), drag, zoom, regions
+- danger-level markers with distinct shapes, clustering of nearby reports
+- filter scopes the map and the list together
+- keyboard accessible, with a table view for screen readers
+
+</td>
+<td width="50%" valign="top">
+
+<img src="docs/screenshots/radar.jpg" alt="Danger Radar world map" width="100%">
+
+</td>
+</tr>
+</table>
+
+<details>
+<summary><b>…and everything else (12 tools in total)</b></summary>
+
+<br>
+
+| Tool | What it does |
+| --- | --- |
+| 🩺 **Bite Triage** | Symptom checklist (fang marks, swelling, neuro/hemo signs, time elapsed) that produces an envenomation risk score |
+| 🏡 **Snake-Proofing** | Exclusion checklists for homes, farms and camps, plus myth-busters |
+| 📞 **Snake Rescuers** | Searchable directory of snake catchers and wildlife helplines |
+| 🏥 **Antivenom Centres** | Nearest centres by GPS, one-tap dialler and navigation |
+| 🔀 **Mimic Analyzer** | Side-by-side venomous snakes vs harmless lookalikes (e.g. coral vs scarlet kingsnake) |
+| 🧬 **Venom Pathology** | How different venom types affect the body |
+| 📚 **Encyclopedia** | Searchable species library with KPI tiles and ranked charts |
+| 🕘 **History** | Your past scans, kept per browser |
+| 🏆 **Quiz** | Test what you know |
+| 📄 **Medical Incident PDF** | Print-ready summary to hand to an ER doctor |
+| 🆘 **SOS button** | Emergency numbers always one click away |
+
+</details>
+
+<details>
+<summary><b>More screenshots</b></summary>
+
+<br>
+
+<img src="docs/screenshots/triage.jpg" alt="Bite triage" width="48%"> <img src="docs/screenshots/encyclopedia.jpg" alt="Encyclopedia" width="48%">
+
+</details>
 
 ---
 
-## 🚀 Getting Started
+## 🏗️ How it's built
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/YOUR_USERNAME/snake-species-detection.git
-cd snake-species-detection
+```
+Browser (React + Vite)  ──►  Express API  ──►  Supabase Postgres
+   GSAP · d3 map               helmet · CSP        sightings · species · scans
+   Lucide · axios              rate limits         row-level security
+                                   │
+                                   └──►  Google Gemini (vision + chat)
 ```
 
-### 2. Configure Environment Variables
-Create a `.env` file in the `server/` directory:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-PORT=5000
-DATABASE_URL=
-```
-*(Note: for **local development only**, if `DATABASE_URL` is left blank the app starts an in-memory Postgres and seeds it with 15 snake species; data is lost on restart. Production requires a real `DATABASE_URL`.)*
+| Layer | Choices |
+| --- | --- |
+| **Frontend** | React 18, Vite, GSAP, d3-geo + topojson (lazy-loaded map chunk), hand-written CSS design system |
+| **Backend** | Node.js, Express, Multer (memory storage), Helmet CSP, express-rate-limit |
+| **AI** | Google Gemini via `@google/genai`: `gemini-3.5-flash-lite` with automatic fallback to `gemini-3.1-flash-lite` |
+| **Database** | Supabase PostgreSQL via `pg`. Tables are created and seeded on first start; row-level security is on. Local dev needs no database (in-memory Postgres via PGlite) |
+| **Privacy** | No accounts. Each browser gets an anonymous random ID, so you only see and manage your own history and sightings |
 
-#### Getting the Supabase `DATABASE_URL`
-1. Create a project at [supabase.com](https://supabase.com) (free tier is fine) and note the database password you choose.
-2. Click **Connect** at the top of the dashboard (or **Project Settings → Database → Connection string**).
-3. Choose the **Session pooler** string. It works over IPv4, which hosting platforms like Render need; the "Direct connection" string is IPv6-only.
-4. Copy it and replace `[YOUR-PASSWORD]` with your password. It looks like:
-   ```
-   postgresql://postgres.abcdefghij:YourPassword@aws-0-us-east-1.pooler.supabase.com:5432/postgres
-   ```
-5. If the password contains special characters (`@ # / : ?`), URL-encode them (`@` becomes `%40`), or reset it to letters and numbers in **Project Settings → Database**.
-6. Put it in `server/.env` as `DATABASE_URL=...`. No SQL to run: the server creates the tables on first start.
+### Engineering highlights
 
-### 3. Install Dependencies
+- **Fast, bounded AI calls.** Gemini latency is spiky (the same call can take 5s or 60s+). Requests use minimal thinking, a hedged backup request to a second model after a short wait, and a hard deadline, taking scans from 30–170s down to about 5s.
+- **Secure by default.** Helmet CSP, per-route rate limits on the AI endpoints (15/min) and sighting submissions, strict input validation, parameterised SQL, and secrets only in environment variables.
+- **Accessible.** Audited with axe-core to zero violations across every tab, dialog and result view. Keyboard support, focus management, reduced-motion support, and table alternatives to charts.
+- **Tested.** 63 integration checks cover every API route, filters, validation, SQL-injection safety, pagination, row-level security and idempotent seeding.
+- **CI.** GitHub Actions runs the tests and the production build on every push.
+
+---
+
+## 🚀 Run it locally
+
+**Requirements:** Node.js 18+ (CI runs 22) and a free [Gemini API key](https://aistudio.google.com/apikey).
+
 ```bash
+git clone https://github.com/zeeshansaeed6/SerpentAI-.git
+cd SerpentAI-
 npm run install-all
 ```
 
-### 4. Start Development Servers
+Create `server/.env`:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+PORT=5000
+DATABASE_URL=            # leave blank for local dev (in-memory Postgres)
+```
+
 ```bash
 npm run dev
 ```
 
-* **Frontend Client**: [http://localhost:5173](http://localhost:5173)
-* **Backend API**: [http://localhost:5000](http://localhost:5000)
+- Client: http://localhost:5173
+- API: http://localhost:5000
+
+> With `DATABASE_URL` blank, the app starts an in-memory Postgres seeded with 15 species. Data is lost on restart. Production requires a real `DATABASE_URL`.
+
+<details>
+<summary><b>Getting a Supabase <code>DATABASE_URL</code></b></summary>
+
+<br>
+
+1. Create a project at [supabase.com](https://supabase.com) (the free tier is fine) and note the database password.
+2. Click **Connect** at the top of the dashboard (or **Project Settings → Database → Connection string**).
+3. Choose the **Session pooler** string. It works over IPv4, which hosts like Render need; the "Direct connection" string is IPv6-only.
+4. Replace `[YOUR-PASSWORD]` with your password:
+   ```
+   postgresql://postgres.abcdefghij:YourPassword@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+   ```
+5. If the password has special characters (`@ # / : ?`), URL-encode them (`@` becomes `%40`) or reset it to letters and numbers.
+6. Put it in `server/.env` as `DATABASE_URL=...`. No SQL to run: the server creates the tables on first start.
+
+</details>
+
+### Optional environment variables
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Primary model |
+| `GEMINI_FALLBACK_MODEL` | `gemini-3.1-flash-lite` | Backup model |
+| `GEMINI_HEDGE_MS` | `8000` | Wait before starting a backup request (scans) |
+| `GEMINI_DEADLINE_MS` | `30000` | Hard limit for a scan |
+| `CLIENT_ORIGIN` | none | Allowed origins when the frontend is hosted separately |
+| `TRUST_PROXY` | `1` in production | Reverse-proxy hops, for correct rate limiting |
 
 ---
 
@@ -104,38 +214,55 @@ npm run dev
 ```bash
 cd server && npm test
 ```
-Runs 38 integration checks (all API routes, filters, validation, SQL-injection safety, pagination, Row Level Security, idempotent seeding) against an in-memory Postgres, with no setup. Set `TEST_DATABASE_URL` to run them through the real `pg` driver against a **disposable** Postgres database instead.
+
+Runs 63 integration checks against an in-memory Postgres with no setup. Set `TEST_DATABASE_URL` to run them through the real `pg` driver against a **disposable** database instead.
 
 ---
 
 ## ☁️ Deployment
 
-### Option A — one service (recommended)
+### One service (recommended)
+
 The Express server serves the built React app and the API from the same origin, so there is no CORS or API-URL setup.
 
-**On Render the fastest way is the included Blueprint** ([`render.yaml`](render.yaml)): *New → Blueprint → select this repo*, then paste your `DATABASE_URL` and `GEMINI_API_KEY` when prompted. Free instances sleep after ~15 minutes idle, so the first visit after a quiet spell is slow. A paid plan stays awake.
+**On Render**, use the included Blueprint ([`render.yaml`](render.yaml)): *New → Blueprint → select this repo*, then paste your `DATABASE_URL` and `GEMINI_API_KEY` when prompted. Free instances sleep after about 15 minutes idle; a paid plan stays awake.
 
-The manual settings below are the same thing by hand.
-
-| Step | Command / value |
+| Step | Value |
 | --- | --- |
 | Build command | `npm run install-all && npm run build` |
 | Start command | `npm start` |
-| Required env | `NODE_ENV=production`, `GEMINI_API_KEY`, `DATABASE_URL` (your Supabase **Session pooler** connection string) |
-| Recommended env | `TRUST_PROXY=1` (default in production; number of reverse-proxy hops) |
+| Required env | `NODE_ENV=production`, `GEMINI_API_KEY`, `DATABASE_URL` (Supabase **Session pooler** string) |
+| Health check | `/api/health` (503 while the database is unreachable) |
 
-Health check path: `/api/health` (returns 503 while the database is unreachable).
+### Separate frontend and API
 
-### Option B — separate frontend and API
-* **API** (Render, Railway, Fly...): start with `npm start` in `server/`; set `NODE_ENV`, `GEMINI_API_KEY`, `DATABASE_URL`, and `CLIENT_ORIGIN=https://your-frontend.example` (comma-separate multiple origins).
-* **Frontend** (Vercel, Netlify...): build with `npm run build` in `client/`, publish `client/dist`, and set `VITE_API_URL=https://your-api.example/api` at build time.
+- **API** (Render, Railway, Fly…): `npm start` in `server/`; set `NODE_ENV`, `GEMINI_API_KEY`, `DATABASE_URL` and `CLIENT_ORIGIN=https://your-frontend.example`.
+- **Frontend** (Vercel, Netlify…): build with `npm run build` in `client/`, publish `client/dist`, and set `VITE_API_URL=https://your-api.example/api` at build time.
 
-### Notes
-* `/api/detect` and `/api/chat` are rate-limited to 15 requests/minute/IP because they call Gemini.
-* Secrets belong in the host's environment settings, never in git (`.env` files are ignored).
-* Sample snake photos are bundled in `client/public/samples`; check each photo's license before commercial use.
+> Secrets belong in your host's environment settings, never in git. Sample snake photos live in `client/public/samples`; check each photo's licence before commercial use.
 
 ---
 
+## 🗺️ Project layout
+
+```
+client/            React app (components, hooks, services, utils)
+server/
+  routes/          detect, chat, snakes, sightings, history, hospitals
+  services/        Gemini integration (hedging, deadlines, chat memory)
+  models/          Postgres data access
+  middleware/      anonymous client identity, error handling
+  test/            integration tests
+render.yaml        one-click Render Blueprint
+.github/workflows  CI
+```
+
+---
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome. Please run `cd server && npm test` and `cd client && npm run build` before opening a PR.
+
 ## 📜 License
-This project is open-source and available under the [MIT License](LICENSE).
+
+[MIT](LICENSE). Not a substitute for professional medical advice.

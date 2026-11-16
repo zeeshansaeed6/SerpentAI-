@@ -29,3 +29,6 @@ graphify-out/
 
 # Browser-test artifacts
 .playwright-mcp/
+
+# Local marketing assets
+linkedin-assets/
