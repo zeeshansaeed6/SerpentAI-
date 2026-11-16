@@ -17,17 +17,8 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map(e => e.message);
-    return res.status(400).json({
-      success: false,
-      message: messages.join(', ')
-    });
-  }
-
-  // Mongoose cast error (invalid ID)
-  if (err.name === 'CastError') {
+  // Postgres: invalid text representation (e.g. a malformed UUID in the URL)
+  if (err.code === '22P02') {
     return res.status(400).json({
       success: false,
       message: 'Invalid ID format'

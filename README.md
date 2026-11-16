@@ -1,10 +1,10 @@
 # 🐍 SerpentAI Ultra — AI Snake Species Detection & Venom Safety Suite
 
-[![MERN Stack](https://img.shields.io/badge/Stack-MERN%20(MongoDB%20%7C%20Express%20%7C%20React%20%7C%20Node.js)-10b981?style=for-the-badge)](https://github.com)
+[![Stack](https://img.shields.io/badge/Stack-React%20%7C%20Express%20%7C%20Supabase%20(PostgreSQL)%20%7C%20Node.js-10b981?style=for-the-badge)](https://github.com)
 [![Gemini AI](https://img.shields.io/badge/AI-Gemini%203.6%20Flash%20Vision-06b6d4?style=for-the-badge)](https://ai.google.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)](LICENSE)
 
-An intelligent, full-stack **MERN** web platform powered by **Multimodal Gemini Vision AI** for instant snake species recognition, venom lethality categorization, emergency first-aid protocols, interactive symptom triage, and nearest hospital dispatch.
+An intelligent, full-stack web platform (React + Express + Supabase/PostgreSQL) powered by **Multimodal Gemini Vision AI** for instant snake species recognition, venom lethality categorization, emergency first-aid protocols, interactive symptom triage, and nearest hospital dispatch.
 
 ---
 
@@ -48,7 +48,7 @@ An intelligent, full-stack **MERN** web platform powered by **Multimodal Gemini 
 * **Frontend**: React 18, Vite, Vanilla CSS Design System with Glassmorphism, Lucide Icons, Canvas Confetti.
 * **Backend**: Node.js, Express.js, Multer (Memory Storage), Helmet, CORS.
 * **AI Engine**: Google Gemini Vision (`gemini-3.6-flash`) via `@google/genai`.
-* **Database**: MongoDB (Supports Mongoose with zero-install `mongodb-memory-server` fallback + auto-seeding).
+* **Database**: PostgreSQL via [Supabase](https://supabase.com) using the `pg` driver. Tables are created and seeded automatically on first start, with Row Level Security enabled. Local development needs no database: it falls back to an in-memory Postgres (PGlite).
 
 ---
 
@@ -65,9 +65,20 @@ Create a `.env` file in the `server/` directory:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 PORT=5000
-MONGODB_URI=
+DATABASE_URL=
 ```
-*(Note: for **local development only**, if `MONGODB_URI` is left blank the app starts an in-memory MongoDB and seeds it with 15 snake species. Production requires a real `MONGODB_URI`.)*
+*(Note: for **local development only**, if `DATABASE_URL` is left blank the app starts an in-memory Postgres and seeds it with 15 snake species; data is lost on restart. Production requires a real `DATABASE_URL`.)*
+
+#### Getting the Supabase `DATABASE_URL`
+1. Create a project at [supabase.com](https://supabase.com) (free tier is fine) and note the database password you choose.
+2. Click **Connect** at the top of the dashboard (or **Project Settings → Database → Connection string**).
+3. Choose the **Session pooler** string. It works over IPv4, which hosting platforms like Render need; the "Direct connection" string is IPv6-only.
+4. Copy it and replace `[YOUR-PASSWORD]` with your password. It looks like:
+   ```
+   postgresql://postgres.abcdefghij:YourPassword@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+   ```
+5. If the password contains special characters (`@ # / : ?`), URL-encode them (`@` becomes `%40`), or reset it to letters and numbers in **Project Settings → Database**.
+6. Put it in `server/.env` as `DATABASE_URL=...`. No SQL to run: the server creates the tables on first start.
 
 ### 3. Install Dependencies
 ```bash
@@ -84,6 +95,15 @@ npm run dev
 
 ---
 
+## 🧪 Tests
+
+```bash
+cd server && npm test
+```
+Runs 38 integration checks (all API routes, filters, validation, SQL-injection safety, pagination, Row Level Security, idempotent seeding) against an in-memory Postgres, with no setup. Set `TEST_DATABASE_URL` to run them through the real `pg` driver against a **disposable** Postgres database instead.
+
+---
+
 ## ☁️ Deployment
 
 ### Option A — one service (recommended)
@@ -93,13 +113,13 @@ The Express server serves the built React app and the API from the same origin, 
 | --- | --- |
 | Build command | `npm run install-all && npm run build` |
 | Start command | `npm start` |
-| Required env | `NODE_ENV=production`, `GEMINI_API_KEY`, `MONGODB_URI` (e.g. a MongoDB Atlas connection string) |
+| Required env | `NODE_ENV=production`, `GEMINI_API_KEY`, `DATABASE_URL` (your Supabase **Session pooler** connection string) |
 | Recommended env | `TRUST_PROXY=1` (default in production; number of reverse-proxy hops) |
 
 Health check path: `/api/health` (returns 503 while the database is unreachable).
 
 ### Option B — separate frontend and API
-* **API** (Render, Railway, Fly...): start with `npm start` in `server/`; set `NODE_ENV`, `GEMINI_API_KEY`, `MONGODB_URI`, and `CLIENT_ORIGIN=https://your-frontend.example` (comma-separate multiple origins).
+* **API** (Render, Railway, Fly...): start with `npm start` in `server/`; set `NODE_ENV`, `GEMINI_API_KEY`, `DATABASE_URL`, and `CLIENT_ORIGIN=https://your-frontend.example` (comma-separate multiple origins).
 * **Frontend** (Vercel, Netlify...): build with `npm run build` in `client/`, publish `client/dist`, and set `VITE_API_URL=https://your-api.example/api` at build time.
 
 ### Notes

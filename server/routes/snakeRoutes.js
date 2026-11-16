@@ -7,23 +7,7 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   try {
     const { search, venomous, danger } = req.query;
-    const filter = {};
-
-    if (search) {
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { scientificName: { $regex: search, $options: 'i' } },
-        { region: { $regex: search, $options: 'i' } }
-      ];
-    }
-    if (venomous !== undefined) {
-      filter.venomous = venomous === 'true';
-    }
-    if (danger) {
-      filter.dangerLevel = danger;
-    }
-
-    const snakes = await Snake.find(filter).sort({ name: 1 });
+    const snakes = await Snake.list({ search, venomous, danger });
     res.json({ success: true, data: snakes, total: snakes.length });
   } catch (error) {
     next(error);

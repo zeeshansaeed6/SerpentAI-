@@ -1,65 +1,34 @@
-const mongoose = require('mongoose');
+const { query, serialize } = require('../config/db');
 
-const snakeSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  scientificName: {
-    type: String,
-    required: true
-  },
-  family: {
-    type: String,
-    default: ''
-  },
-  venomous: {
-    type: Boolean,
-    default: false
-  },
-  dangerLevel: {
-    type: String,
-    enum: ['Harmless', 'Mild', 'Moderate', 'Dangerous', 'Deadly'],
-    default: 'Harmless'
-  },
-  description: {
-    type: String,
-    default: ''
-  },
-  habitat: {
-    type: String,
-    default: ''
-  },
-  region: {
-    type: String,
-    default: ''
-  },
-  diet: {
-    type: String,
-    default: ''
-  },
-  averageLength: {
-    type: String,
-    default: ''
-  },
-  color: {
-    type: String,
-    default: ''
-  },
-  firstAid: {
-    type: String,
-    default: ''
-  },
-  funFact: {
-    type: String,
-    default: ''
-  },
-  imageUrl: {
-    type: String,
-    default: ''
+// Escape LIKE wildcards so user input is matched literally
+const escapeLike = (value) => value.replace(/[\\%_]/g, '\\$&');
+
+const list = async ({ search, venomous, danger } = {}) => {
+  const where = [];
+  const params = [];
+
+  if (search) {
+    params.push(`%${escapeLike(String(search))}%`);
+    const n = params.length;
+    where.push(`(name ILIKE $${n} ESCAPE '\\' OR scientific_name ILIKE $${n} ESCAPE '\\' OR region ILIKE $${n} ESCAPE '\\')`);
   }
-}, {
-  timestamps: true
-});
+  if (venomous !== undefined) {
+    params.push(venomous === 'true');
+    where.push(`venomous = $${params.length}`);
+  }
+  if (danger) {
+    params.push(String(danger));
+    where.push(`danger_level = $${params.length}`);
+  }
 
-module.exports = mongoose.model('Snake', snakeSchema);
+  const sql = `SELECT * FROM snakes${where.length ? ` WHERE ${where.join(' AND ')}` : ''} ORDER BY name ASC`;
+  const { rows } = await query(sql, params);
+  return rows.map(serialize);
+};
+
+const findById = async (id) => {
+  const { rows } = await query('SELECT * FROM snakes WHERE id = $1', [id]);
+  return serialize(rows[0]) || null;
+};
+
+module.exports = { list, findById };

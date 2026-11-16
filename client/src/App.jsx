@@ -63,7 +63,7 @@ export default function App() {
             <span className="brand-title">SerpentAI Global Intelligence & Antivenom Network</span>
           </div>
           <p style={{ color: '#8aa395', fontSize: '0.82rem', maxWidth: '650px', margin: 0 }}>
-            Powered by MERN Stack (MongoDB, Express, React, Node.js) & Multimodal Gemini 3.6 Flash.
+            Powered by React, Express, Supabase (PostgreSQL) & Multimodal Gemini 3.6 Flash.
             <br />
             <strong>Medical Notice:</strong> Always contact emergency services (911 / 112 / 108) immediately for snake encounters.
           </p>

@@ -1,7 +1,7 @@
 {
   "name": "snake-species-detection",
   "version": "1.0.0",
-  "description": "AI-Based Snake Species Detection using MERN Stack & Gemini API",
+  "description": "AI-based snake species detection with React, Express, Supabase (PostgreSQL) and the Gemini API",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",

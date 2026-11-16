@@ -49,9 +49,9 @@ router.post('/', upload.single('image'), async (req, res, next) => {
     }
 
     // Save detection to database
-    const detection = new Detection({
+    const detection = await Detection.create({
       imageData: imageDataUri,
-      snakeName: result.snakeName,
+      snakeName: result.snakeName || 'Unidentified snake',
       scientificName: result.scientificName,
       confidence: result.confidence,
       venomous: result.venomous,
@@ -64,8 +64,6 @@ router.post('/', upload.single('image'), async (req, res, next) => {
       behavior: result.behavior || '',
       diet: result.diet || ''
     });
-
-    await detection.save();
 
     res.status(200).json({
       success: true,

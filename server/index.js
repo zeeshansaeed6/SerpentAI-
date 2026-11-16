@@ -5,8 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const mongoose = require('mongoose');
-const { connectDB, disconnectDB } = require('./config/db');
+const { connectDB, disconnectDB, ping } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
 // Import routes
@@ -69,8 +68,8 @@ app.use('/api/hospitals', hospitalRoutes);
 app.use('/api/chat', aiLimiter, chatRoutes);
 
 // Health check (503 while the database is down so platform health checks can restart us)
-app.get('/api/health', (req, res) => {
-  const dbUp = mongoose.connection.readyState === 1;
+app.get('/api/health', async (req, res) => {
+  const dbUp = await ping();
   res.status(dbUp ? 200 : 503).json({
     success: dbUp,
     message: dbUp ? '🐍 Snake Detection API is running!' : 'Database unavailable',

@@ -1,53 +1,27 @@
-const mongoose = require('mongoose');
+const { query, serialize } = require('../config/db');
 
-const sightingSchema = new mongoose.Schema({
-  speciesName: {
-    type: String,
-    required: true
-  },
-  scientificName: {
-    type: String,
-    default: 'Unknown'
-  },
-  venomous: {
-    type: Boolean,
-    default: false
-  },
-  dangerLevel: {
-    type: String,
-    enum: ['Harmless', 'Moderate', 'Dangerous', 'Deadly'],
-    default: 'Harmless'
-  },
-  locationName: {
-    type: String,
-    required: true
-  },
-  latitude: {
-    type: Number,
-    required: true
-  },
-  longitude: {
-    type: Number,
-    required: true
-  },
-  notes: {
-    type: String,
-    default: ''
-  },
-  imageData: {
-    type: String,
-    default: ''
-  },
-  reporterName: {
-    type: String,
-    default: 'Anonymous Explorer'
-  },
-  verified: {
-    type: Boolean,
-    default: true
-  }
-}, {
-  timestamps: true
-});
+const DANGER_LEVELS = ['Harmless', 'Moderate', 'Dangerous', 'Deadly'];
 
-module.exports = mongoose.model('Sighting', sightingSchema);
+const list = async () => {
+  const { rows } = await query('SELECT * FROM sightings ORDER BY created_at DESC');
+  return rows.map(serialize);
+};
+
+const create = async (s) => {
+  const { rows } = await query(
+    `INSERT INTO sightings (species_name, scientific_name, venomous, danger_level, location_name,
+       latitude, longitude, notes, image_data, reporter_name)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+     RETURNING *`,
+    [s.speciesName, s.scientificName, s.venomous, s.dangerLevel, s.locationName,
+      s.latitude, s.longitude, s.notes, s.imageData, s.reporterName]
+  );
+  return serialize(rows[0]);
+};
+
+const remove = async (id) => {
+  const { rowCount } = await query('DELETE FROM sightings WHERE id = $1', [id]);
+  return rowCount > 0;
+};
+
+module.exports = { DANGER_LEVELS, list, create, remove };

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node index.js",
     "seed": "node data/seedSnakes.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node test/integration.js"
   },
   "dependencies": {
     "@google/genai": "^2.3.0",
@@ -15,14 +16,14 @@
     "express": "^4.21.1",
     "express-rate-limit": "^8.7.4",
     "helmet": "^8.0.0",
-    "mongoose": "^8.9.5",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.23.1"
   },
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
-    "mongodb-memory-server": "^11.3.0"
+    "@electric-sql/pglite": "^0.5.16"
   },
   "overrides": {
     "qs": "^6.16.1"
