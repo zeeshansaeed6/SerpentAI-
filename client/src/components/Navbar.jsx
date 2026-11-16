@@ -4,6 +4,7 @@ import {
   Radio, ArrowRightLeft, Hospital, Activity, Bot, HeartPulse, Home, Shield
 } from 'lucide-react';
 import EmergencyModal from './EmergencyModal';
+import SerpentMark from './SerpentMark';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
@@ -43,35 +44,34 @@ export default function Navbar({ activeTab, setActiveTab }) {
           style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', cursor: 'pointer', flexShrink: 0 }}
         >
           <div style={{
-            background: 'linear-gradient(135deg, #0891b2, #10b981)',
+            background: 'linear-gradient(145deg, #0c2a20, #061510)',
             width: '40px',
             height: '40px',
             borderRadius: '12px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.3rem',
-            border: '1px solid rgba(103, 232, 249, 0.4)',
-            boxShadow: '0 0 18px rgba(34, 211, 238, 0.45), inset 0 1px 0 rgba(255,255,255,0.25)'
+            border: '1px solid rgba(52, 211, 153, 0.45)',
+            boxShadow: '0 0 18px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255,255,255,0.12)'
           }}>
-            🐍
+            <SerpentMark size={24} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <span className="brand-title" style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff' }}>SerpentAI</span>
               <span style={{
-                background: 'rgba(34, 211, 238, 0.16)',
-                color: '#67e8f9',
+                background: 'rgba(52, 211, 153, 0.14)',
+                color: '#6ee7b7',
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.08em',
                 fontSize: '0.6rem',
                 fontWeight: 700,
                 padding: '0.1rem 0.4rem',
                 borderRadius: '6px',
-                border: '1px solid rgba(34, 211, 238, 0.4)'
+                border: '1px solid rgba(52, 211, 153, 0.4)'
               }}>Ultra</span>
             </div>
-            <div className="brand-tagline mono" style={{ fontSize: '0.62rem', color: '#7d93ad', display: 'flex', alignItems: 'center', gap: '0.4rem', textTransform: 'uppercase' }}>
+            <div className="brand-tagline mono" style={{ fontSize: '0.62rem', color: '#7f988a', display: 'flex', alignItems: 'center', gap: '0.4rem', textTransform: 'uppercase' }}>
               <span className="status-dot" /> Network online
             </div>
           </div>
@@ -102,9 +102,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   gap: '0.35rem',
                   padding: '0.45rem 0.65rem',
                   borderRadius: '9px',
-                  background: isActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
-                  color: isActive ? '#67e8f9' : '#94a3b8',
-                  border: isActive ? '1px solid rgba(34, 211, 238, 0.4)' : '1px solid transparent',
+                  background: isActive ? 'rgba(52, 211, 153, 0.12)' : 'transparent',
+                  color: isActive ? '#6ee7b7' : '#94a3b8',
+                  border: isActive ? '1px solid rgba(52, 211, 153, 0.4)' : '1px solid transparent',
                   fontWeight: 600,
                   fontSize: '0.78rem',
                   cursor: 'pointer',
@@ -170,8 +170,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   gap: '0.75rem',
                   padding: '0.65rem 1rem',
                   borderRadius: '8px',
-                  background: isActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
-                  color: isActive ? '#67e8f9' : '#cbd5e1',
+                  background: isActive ? 'rgba(52, 211, 153, 0.12)' : 'transparent',
+                  color: isActive ? '#6ee7b7' : '#cbd5e1',
                   border: 'none',
                   fontWeight: 600,
                   width: '100%',

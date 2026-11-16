@@ -1,35 +1,41 @@
 /* ==========================================================================
-   SerpentAI — "Neo-HUD" theme
-   Near-black canvas, electric cyan + emerald neon, holographic gradients,
-   glowing hairline borders, HUD corner brackets, drifting aurora lighting.
+   SerpentAI — "Thermal Field Station"
+   A field instrument for snake identification.
+   - Terrarium green-black surfaces, venom-green brand
+   - ONE warm signal: the thermal gradient (indigo → magenta → orange → yellow),
+     reserved for heat/danger: scan beam, hazard text, risk meters
+   - Fraunces serif headings + italic Latin names (field-guide), mono specimen tags
+   - Fish-scale texture backdrop, hairline panels, HUD corner brackets
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
-  /* Surfaces */
-  --bg-main: #04070c;
-  --bg-card: rgba(10, 18, 30, 0.66);
-  --bg-card-hover: rgba(14, 26, 42, 0.84);
-  --bg-glass: rgba(8, 15, 26, 0.58);
-  --border-glass: rgba(120, 200, 255, 0.12);
-  --border-glow: rgba(34, 211, 238, 0.45);
-  --highlight: rgba(180, 235, 255, 0.06); /* top-edge sheen on glass */
+  /* Surfaces — green-tinted blacks, one hue, lightness steps only */
+  --bg-main: #050b09;
+  --bg-card: rgba(11, 24, 19, 0.72);
+  --bg-card-hover: rgba(15, 33, 26, 0.88);
+  --bg-glass: rgba(9, 19, 15, 0.62);
+  --border-glass: rgba(150, 230, 190, 0.11);
+  --border-glow: rgba(52, 211, 153, 0.45);
+  --highlight: rgba(190, 255, 225, 0.05); /* top-edge sheen on glass */
 
-  /* Neon palette */
-  --cyan-300: #67e8f9;
-  --cyan-400: #22d3ee;
-  --cyan-500: #06b6d4;
-  --cyan-600: #0891b2;
+  /* Brand: venom green */
   --emerald-300: #6ee7b7;
   --emerald-400: #34d399;
   --emerald-500: #10b981;
   --emerald-600: #059669;
-  --violet-400: #a78bfa;
-  --emerald-glow: rgba(16, 185, 129, 0.38);
-  --cyan-glow: rgba(34, 211, 238, 0.38);
+  --emerald-700: #047857;
+  --lime-300: #bef264;
+  --lime-400: #a3e635;
+  --emerald-glow: rgba(16, 185, 129, 0.4);
 
-  /* Signal colors */
+  /* Signal: thermal (heat + danger only) */
+  --thermal-gradient: linear-gradient(90deg, #4c1d95 0%, #a21caf 26%, #ef4444 52%, #f97316 74%, #fde047 100%);
+  --thermal-text: linear-gradient(95deg, #c084fc 0%, #f43f5e 36%, #fb923c 68%, #fde047 100%);
+  --thermal-hot: #f97316;
+
+  /* Semantic */
   --toxic-lime: #a3e635;
   --toxic-yellow: #facc15;
   --danger-red: #ef4444;
@@ -38,11 +44,11 @@
   --safe-cyan: #06b6d4;
 
   /* Text */
-  --text-primary: #e8f1fb;
-  --text-secondary: #9db2cb;
-  --text-muted: #667c94;
+  --text-primary: #ecf6f0;
+  --text-secondary: #a8bcb1;
+  --text-muted: #70887a;
 
-  /* Shape & depth */
+  /* Shape & depth: hairline borders + soft shadows */
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
@@ -51,11 +57,12 @@
   --shadow-sm: 0 2px 10px -2px rgba(0, 0, 0, 0.55);
   --shadow-md: 0 14px 32px -10px rgba(0, 0, 0, 0.65), 0 4px 10px -4px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 28px 56px -14px rgba(0, 0, 0, 0.7), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
-  --shadow-neon: 0 0 28px var(--cyan-glow);
+  --shadow-neon: 0 0 28px var(--emerald-glow);
   --shadow-danger: 0 0 28px var(--danger-glow);
 
-  --font-display: 'Space Grotesk', 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif; /* h1/h2, species names */
+  --font-ui: 'Space Grotesk', 'Outfit', sans-serif;               /* h3-h6, wordmark */
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace; /* specimen tags */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -81,7 +88,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Layer 1: drifting aurora lighting (cyan / emerald / violet) */
+/* Layer 1: lighting — venom-green glow top-left, a faint thermal ember bottom-right */
 body::before {
   content: '';
   position: fixed;
@@ -89,39 +96,49 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(38rem 28rem at 18% 12%, rgba(34, 211, 238, 0.13), transparent 65%),
-    radial-gradient(34rem 26rem at 88% 78%, rgba(16, 185, 129, 0.12), transparent 65%),
-    radial-gradient(28rem 22rem at 70% 18%, rgba(167, 139, 250, 0.08), transparent 65%);
-  animation: aurora-drift 32s ease-in-out infinite alternate;
+    radial-gradient(40rem 30rem at 15% 10%, rgba(16, 185, 129, 0.13), transparent 65%),
+    radial-gradient(30rem 24rem at 80% 12%, rgba(163, 230, 53, 0.05), transparent 65%),
+    radial-gradient(36rem 28rem at 92% 88%, rgba(249, 115, 22, 0.07), transparent 65%);
+  animation: aurora-drift 34s ease-in-out infinite alternate;
   will-change: transform;
 }
 
-/* Layer 2: HUD grid that fades toward the edges */
+/* Layer 2: fish-scale texture, fading toward the edges */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    linear-gradient(rgba(120, 200, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 200, 255, 0.045) 1px, transparent 1px);
-  background-size: 48px 48px;
-  -webkit-mask-image: radial-gradient(ellipse at 50% 25%, #000 15%, transparent 72%);
-  mask-image: radial-gradient(ellipse at 50% 25%, #000 15%, transparent 72%);
-  animation: grid-drift 60s linear infinite;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='38' viewBox='0 0 44 38'%3E%3Cg fill='none' stroke='%2334d399' stroke-opacity='.10' stroke-width='1'%3E%3Cpath d='M0 0a11 11 0 0 1 22 0a11 11 0 0 1 22 0'/%3E%3Cpath d='M-11 19a11 11 0 0 1 22 0a11 11 0 0 1 22 0a11 11 0 0 1 22 0'/%3E%3Cpath d='M0 38a11 11 0 0 1 22 0a11 11 0 0 1 22 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 44px 38px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 22%, #000 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 50% 22%, #000 10%, transparent 70%);
 }
 
 ::selection {
-  background: rgba(34, 211, 238, 0.35);
+  background: rgba(52, 211, 153, 0.35);
   color: #fff;
 }
 
-h1, h2, h3, h4, h5, h6, .brand-title {
+h1, h2 {
   font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+h3, h4, h5, h6, .brand-title {
+  font-family: var(--font-ui);
   font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 button, input, select, textarea {
@@ -137,9 +154,15 @@ img {
   letter-spacing: 0.04em;
 }
 
+/* Latin binomials: always serif italic */
+.latin {
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
 /* Accessible, on-brand focus indicators */
 :focus-visible {
-  outline: 2px solid var(--cyan-400);
+  outline: 2px solid var(--emerald-400);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -148,8 +171,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--cyan-400) !important;
-  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18), 0 0 18px rgba(34, 211, 238, 0.12);
+  border-color: var(--emerald-400) !important;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2), 0 0 18px rgba(52, 211, 153, 0.12);
 }
 
 input::placeholder,
@@ -159,12 +182,12 @@ textarea::placeholder {
 
 /* ---------- Surfaces ---------- */
 
-/* Panels get a gradient hairline border (drawn with a masked ::before) */
 .glass-panel,
 .glass-card {
   position: relative;
 }
 
+/* Hairline border: venom green top-left, a thermal ember bottom-right */
 .glass-panel::before,
 .glass-card::before {
   content: '';
@@ -174,10 +197,10 @@ textarea::placeholder {
   border-radius: inherit;
   pointer-events: none;
   background: linear-gradient(135deg,
-    rgba(34, 211, 238, 0.42),
+    rgba(52, 211, 153, 0.45),
     rgba(255, 255, 255, 0.05) 38%,
     rgba(255, 255, 255, 0.03) 62%,
-    rgba(16, 185, 129, 0.38));
+    rgba(249, 115, 22, 0.30));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
@@ -201,7 +224,7 @@ textarea::placeholder {
 }
 
 .glass-panel:hover {
-  box-shadow: var(--shadow-md), 0 0 30px rgba(34, 211, 238, 0.06), inset 0 1px 0 var(--highlight);
+  box-shadow: var(--shadow-md), 0 0 30px rgba(52, 211, 153, 0.06), inset 0 1px 0 var(--highlight);
 }
 
 .glass-card {
@@ -219,12 +242,12 @@ textarea::placeholder {
   background: var(--bg-card-hover);
   border-color: var(--border-glow);
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md), 0 0 26px rgba(34, 211, 238, 0.16), inset 0 1px 0 var(--highlight);
+  box-shadow: var(--shadow-md), 0 0 26px rgba(52, 211, 153, 0.14), inset 0 1px 0 var(--highlight);
 }
 
 /* Sticky header must stay legible over scrolling content */
 header.glass-panel {
-  background: rgba(6, 12, 20, 0.86);
+  background: rgba(5, 12, 10, 0.88);
 }
 
 /* HUD corner brackets: add alongside .glass-panel on hero surfaces */
@@ -233,7 +256,7 @@ header.glass-panel {
   position: absolute;
   inset: 10px;
   pointer-events: none;
-  --c: var(--cyan-400);
+  --c: var(--emerald-400);
   --l: 16px;
   --t: 2px;
   background:
@@ -245,8 +268,33 @@ header.glass-panel {
     linear-gradient(var(--c), var(--c)) bottom left / var(--t) var(--l) no-repeat,
     linear-gradient(var(--c), var(--c)) bottom right / var(--l) var(--t) no-repeat,
     linear-gradient(var(--c), var(--c)) bottom right / var(--t) var(--l) no-repeat;
-  opacity: 0.75;
-  filter: drop-shadow(0 0 4px var(--cyan-400));
+  opacity: 0.7;
+  filter: drop-shadow(0 0 4px var(--emerald-400));
+}
+
+/* Specimen tag: mono label used for IDs, field numbers, status */
+.specimen-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--emerald-300);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px dashed rgba(52, 211, 153, 0.45);
+  border-radius: 6px;
+}
+
+/* Thermal rule: a thin heat-map strip used as a divider/meter */
+.thermal-bar {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--thermal-gradient);
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.35);
 }
 
 /* ---------- Layout ---------- */
@@ -283,6 +331,7 @@ header.glass-panel {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
+  min-height: 44px; /* WCAG touch target */
   border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.95rem;
@@ -312,7 +361,7 @@ header.glass-panel {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
   transform: translateX(-120%);
   transition: transform 0.7s var(--ease);
 }
@@ -323,15 +372,15 @@ header.glass-panel {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--cyan-600), var(--emerald-600));
+  background: linear-gradient(135deg, var(--emerald-700), var(--emerald-500));
   color: #fff;
-  border-color: rgba(103, 232, 249, 0.35);
-  box-shadow: 0 4px 20px var(--cyan-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(190, 242, 100, 0.35);
+  box-shadow: 0 4px 20px var(--emerald-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--cyan-500), var(--emerald-500));
-  box-shadow: 0 8px 30px rgba(34, 211, 238, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, var(--emerald-600), var(--emerald-400));
+  box-shadow: 0 8px 30px rgba(52, 211, 153, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
@@ -350,30 +399,30 @@ header.glass-panel {
 }
 
 .btn-secondary {
-  background: rgba(120, 200, 255, 0.06);
+  background: rgba(150, 230, 190, 0.06);
   color: var(--text-primary);
   border-color: var(--border-glass);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(34, 211, 238, 0.1);
+  background: rgba(52, 211, 153, 0.1);
   border-color: var(--border-glow);
-  box-shadow: 0 0 18px rgba(34, 211, 238, 0.14);
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.14);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--cyan-300);
-  border-color: rgba(34, 211, 238, 0.55);
+  color: var(--emerald-300);
+  border-color: rgba(52, 211, 153, 0.55);
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: rgba(34, 211, 238, 0.12);
+  background: rgba(52, 211, 153, 0.12);
   color: #fff;
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.25);
 }
 
-/* ---------- Badges (mono HUD tags) ---------- */
+/* ---------- Badges (mono specimen tags) ---------- */
 
 .badge {
   display: inline-flex;
@@ -438,11 +487,6 @@ header.glass-panel {
   to   { transform: translate3d(3%, 2%, 0) scale(1.08); }
 }
 
-@keyframes grid-drift {
-  from { background-position: 0 0, 0 0; }
-  to   { background-position: 48px 48px, 48px 48px; }
-}
-
 @keyframes holo-shift {
   to { background-position: 300% 50%; }
 }
@@ -459,9 +503,9 @@ header.glass-panel {
 }
 
 @keyframes scan-line {
-  0%   { top: 0%;  opacity: 0.8; }
+  0%   { top: 0%;  opacity: 0.85; }
   50%  { opacity: 1; }
-  100% { top: 98%; opacity: 0.8; }
+  100% { top: 98%; opacity: 0.85; }
 }
 
 .scanner-overlay {
@@ -472,30 +516,32 @@ header.glass-panel {
   border-radius: inherit;
 }
 
+/* The scan beam is a heat read-out: thermal gradient with an ember glow */
 .scan-beam {
   position: absolute;
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--cyan-400), #fff, var(--cyan-400), transparent);
-  box-shadow: 0 0 16px var(--cyan-400), 0 0 34px var(--cyan-500);
+  background: linear-gradient(90deg, transparent, #a21caf, #f97316, #fde047, #f97316, #a21caf, transparent);
+  box-shadow: 0 0 18px rgba(249, 115, 22, 0.75), 0 0 44px rgba(249, 115, 22, 0.35);
   animation: scan-line 2.2s ease-in-out infinite alternate;
 }
 
 /* ---------- Gradient text ---------- */
 
-/* Holographic: slowly cycling cyan → emerald → violet */
+/* Brand emphasis: venom green → lime, slowly shimmering */
 .text-gradient-emerald {
-  background: linear-gradient(100deg, #67e8f9, #34d399, #a78bfa, #67e8f9);
+  background: linear-gradient(100deg, #6ee7b7, #bef264, #34d399, #6ee7b7);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: holo-shift 9s linear infinite;
+  animation: holo-shift 10s linear infinite;
 }
 
+/* Hazard emphasis: thermal read-out */
 .text-gradient-fire {
-  background: linear-gradient(135deg, #fef08a 0%, #f97316 50%, #ef4444 100%);
+  background: var(--thermal-text);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -505,7 +551,7 @@ header.glass-panel {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1d3a4d transparent;
+  scrollbar-color: #1d3a30 transparent;
 }
 
 ::-webkit-scrollbar {
@@ -516,11 +562,11 @@ header.glass-panel {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1d3a4d;
+  background: #1d3a30;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a5670;
+  background: #2b5545;
 }
 
 /* ---------- Responsive ---------- */
@@ -538,7 +584,7 @@ header.glass-panel {
 }
 
 .desktop-nav .nav-btn:hover:not(.active) {
-  background: rgba(34, 211, 238, 0.08) !important;
+  background: rgba(52, 211, 153, 0.08) !important;
   color: var(--text-primary) !important;
 }
 

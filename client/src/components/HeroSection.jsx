@@ -16,19 +16,18 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
         alignItems: 'center',
         gap: '0.5rem',
         padding: '0.4rem 1rem',
-        background: 'rgba(34, 211, 238, 0.1)',
-        border: '1px solid rgba(34, 211, 238, 0.35)',
-        boxShadow: '0 0 20px rgba(34, 211, 238, 0.12)',
-        borderRadius: '999px',
+        background: 'rgba(16, 185, 129, 0.08)',
+        border: '1px dashed rgba(52, 211, 153, 0.5)',
+        borderRadius: '8px',
         fontFamily: 'var(--font-mono)',
-        letterSpacing: '0.04em',
+        letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        fontSize: '0.74rem',
-        color: '#67e8f9',
+        fontSize: '0.72rem',
+        color: '#6ee7b7',
         fontWeight: 600,
         marginBottom: '1.5rem'
       }}>
-        <Zap size={15} /> Multimodal Gemini Vision AI
+        <Zap size={14} /> Field Station · Gemini Vision
       </div>
 
       {/* Main Headline */}
@@ -38,7 +37,7 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
         marginBottom: '1.25rem',
         fontWeight: 800
       }}>
-        Instant <span className="text-gradient-emerald">Snake Species</span> & <span className="text-gradient-fire">Venom Hazard</span> Detection
+        Instant <span className="text-gradient-emerald latin">Snake Species</span> &amp; <span className="text-gradient-fire">Venom Hazard</span> Detection
       </h1>
 
       {/* Subtitle */}
@@ -63,22 +62,32 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
         margin: '0 auto',
         borderRadius: '16px'
       }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#34d399', fontSize: '1.75rem', fontWeight: 800 }}>3,500+</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Species Supported</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#facc15', fontSize: '1.75rem', fontWeight: 800 }}>&lt; 2.5s</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Analysis Speed</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#06b6d4', fontSize: '1.75rem', fontWeight: 800 }}>98.7%</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Identification Accuracy</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#ef4444', fontSize: '1.75rem', fontWeight: 800 }}>24/7</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Emergency Antivenom Guide</div>
-        </div>
+        {[
+          { value: '3,500+', label: 'Species supported' },
+          { value: '< 2.5s', label: 'Analysis speed' },
+          { value: '98.7%', label: 'Identification accuracy' },
+          { value: '24/7', label: 'Emergency antivenom guide', hot: true }
+        ].map((stat) => (
+          <div key={stat.label} style={{ textAlign: 'center' }}>
+            <div
+              className={stat.hot ? 'text-gradient-fire' : undefined}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '2rem',
+                fontWeight: 600,
+                lineHeight: 1.1,
+                fontVariantNumeric: 'tabular-nums',
+                color: stat.hot ? undefined : '#ecf6f0',
+                marginBottom: '0.3rem'
+              }}
+            >
+              {stat.value}
+            </div>
+            <div className="mono" style={{ color: '#8aa395', fontSize: '0.66rem', textTransform: 'uppercase' }}>
+              {stat.label}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

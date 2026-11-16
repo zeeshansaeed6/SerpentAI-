@@ -284,7 +284,7 @@ export default function ResultCard({ result, onScanAgain }) {
                   <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '0.2rem' }}>
                     {result.snakeName}
                   </h2>
-                  <div style={{ fontStyle: 'italic', color: '#34d399', fontSize: '1.05rem' }}>
+                  <div className="latin" style={{ color: '#6ee7b7', fontSize: '1.25rem' }}>
                     {result.scientificName}
                   </div>
                 </div>
