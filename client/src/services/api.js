@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// Same-origin '/api' by default (Vite proxy in dev, or the Express server hosting the build).
+// Set VITE_API_URL (e.g. https://api.example.com/api) when the API is deployed on another host.
 const API = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 45000 // 45s timeout for AI image analysis
 });
 

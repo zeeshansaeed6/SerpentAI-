@@ -17,7 +17,6 @@ const COMPARISON_PAIRS = [
       banding: 'Red bands directly touch Yellow bands',
       fangs: 'Fixed, short front fangs with neurotoxic venom',
       temperament: 'Extremely secretive and shy, but lethal if provoked',
-      image: 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=400&q=80'
     },
     snakeB: {
       name: 'Scarlet Kingsnake',
@@ -30,7 +29,6 @@ const COMPARISON_PAIRS = [
       banding: 'Red bands touch Black bands (separated from yellow)',
       fangs: 'No fangs or venom; non-venomous constrictor',
       temperament: 'Harmless to humans, beneficial rodent control',
-      image: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=400&q=80'
     }
   },
   {
@@ -48,7 +46,6 @@ const COMPARISON_PAIRS = [
       banding: 'Ragged pixelated dark hourglass saddles with pixelated edges',
       fangs: 'Hinged front fangs delivering destructive cytotoxic/hemotoxic venom',
       temperament: 'Coils and opens bright white mouth (cottonmouth) when alarmed',
-      image: 'https://images.unsplash.com/photo-1563281577-a7be47e20db9?auto=format&fit=crop&w=400&q=80'
     },
     snakeB: {
       name: 'Banded Water Snake',
@@ -61,7 +58,6 @@ const COMPARISON_PAIRS = [
       banding: 'Clean unbroken crossbands, vertical dark bars on lower lip scales',
       fangs: 'No fangs or venom glands; teeth only',
       temperament: 'Dives into water quickly; bites only if physically grasped',
-      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=400&q=80'
     }
   },
   {
@@ -79,7 +75,6 @@ const COMPARISON_PAIRS = [
       banding: 'Tan/brown/black with hood spectacle mark; body scales smooth',
       fangs: 'Proteroglyphous fixed fangs delivering potent neurotoxin',
       temperament: 'Rises up 1/3 of body length and loudly hisses when cornered',
-      image: 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=400&q=80'
     },
     snakeB: {
       name: 'Oriental Rat Snake (Dhaman)',
@@ -92,7 +87,6 @@ const COMPARISON_PAIRS = [
       banding: 'Olive/brown with black reticulated net pattern towards the tail',
       fangs: 'No venom; extremely fast lightning runner',
       temperament: 'Fast fleeing; will mimic a growl if cornered but non-venomous',
-      image: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=400&q=80'
     }
   }
 ];
