@@ -67,7 +67,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 PORT=5000
 MONGODB_URI=
 ```
-*(Note: If `MONGODB_URI` is left blank, the app will automatically start an in-memory MongoDB database and seed it with 15 snake species!)*
+*(Note: for **local development only**, if `MONGODB_URI` is left blank the app starts an in-memory MongoDB and seeds it with 15 snake species. Production requires a real `MONGODB_URI`.)*
 
 ### 3. Install Dependencies
 ```bash
@@ -81,6 +81,31 @@ npm run dev
 
 * **Frontend Client**: [http://localhost:5173](http://localhost:5173)
 * **Backend API**: [http://localhost:5000](http://localhost:5000)
+
+---
+
+## ☁️ Deployment
+
+### Option A — one service (recommended)
+The Express server serves the built React app and the API from the same origin, so there is no CORS or API-URL setup.
+
+| Step | Command / value |
+| --- | --- |
+| Build command | `npm run install-all && npm run build` |
+| Start command | `npm start` |
+| Required env | `NODE_ENV=production`, `GEMINI_API_KEY`, `MONGODB_URI` (e.g. a MongoDB Atlas connection string) |
+| Recommended env | `TRUST_PROXY=1` (default in production; number of reverse-proxy hops) |
+
+Health check path: `/api/health` (returns 503 while the database is unreachable).
+
+### Option B — separate frontend and API
+* **API** (Render, Railway, Fly...): start with `npm start` in `server/`; set `NODE_ENV`, `GEMINI_API_KEY`, `MONGODB_URI`, and `CLIENT_ORIGIN=https://your-frontend.example` (comma-separate multiple origins).
+* **Frontend** (Vercel, Netlify...): build with `npm run build` in `client/`, publish `client/dist`, and set `VITE_API_URL=https://your-api.example/api` at build time.
+
+### Notes
+* `/api/detect` and `/api/chat` are rate-limited to 15 requests/minute/IP because they call Gemini.
+* Secrets belong in the host's environment settings, never in git (`.env` files are ignored).
+* Sample snake photos are bundled in `client/public/samples`; check each photo's license before commercial use.
 
 ---
 

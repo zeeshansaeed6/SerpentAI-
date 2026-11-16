@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
 
 let mongoServer;
 
@@ -7,16 +6,23 @@ const connectDB = async () => {
   try {
     let uri = process.env.MONGODB_URI;
 
-    // If no URI is provided, use in-memory MongoDB
     if (!uri) {
+      // The in-memory database is a dev convenience: it downloads a MongoDB binary and loses
+      // all data on restart, so production must be configured with a real database.
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('MONGODB_URI is required when NODE_ENV=production');
+      }
+
       console.log('🧠 Starting in-memory MongoDB server...');
+      const { MongoMemoryServer } = require('mongodb-memory-server'); // dev dependency: loaded lazily
       mongoServer = new MongoMemoryServer();
       await mongoServer.start();
       uri = mongoServer.getUri();
       console.log('✅ In-memory MongoDB started successfully');
     }
 
-    const conn = await mongoose.connect(uri);
+    // Fail fast (instead of hanging for 30s) when the database is unreachable
+    const conn = await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
     console.log(`📦 MongoDB Connected: ${conn.connection.host}`);
 
     // Seed snake data on first connection

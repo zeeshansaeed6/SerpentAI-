@@ -8,7 +8,9 @@
     "client": "cd client && npm run dev",
     "kill-ports": "powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue\"",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",
-    "seed": "cd server && node data/seedSnakes.js"
+    "seed": "cd server && node data/seedSnakes.js",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
