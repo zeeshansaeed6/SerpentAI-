@@ -1,10 +1,17 @@
 import axios from 'axios';
+import { getClientId } from './clientId';
 
 // Same-origin '/api' by default (Vite proxy in dev, or the Express server hosting the build).
 // Set VITE_API_URL (e.g. https://api.example.com/api) when the API is deployed on another host.
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 45000 // 45s timeout for AI image analysis
+});
+
+// Identify this browser anonymously: private scan history, delete-only-my-own sightings
+API.interceptors.request.use((config) => {
+  config.headers['X-Client-Id'] = getClientId();
+  return config;
 });
 
 // Detection API

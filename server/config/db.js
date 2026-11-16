@@ -11,6 +11,7 @@ const serialize = (row) => {
   if (!row) return row;
   const out = {};
   for (const [key, value] of Object.entries(row)) {
+    if (key === 'client_id') continue; // owner identity never leaves the server
     out[key === 'id' ? '_id' : camelCase(key)] = value;
   }
   return out;
@@ -79,6 +80,11 @@ CREATE TABLE IF NOT EXISTS sightings (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS sightings_created_at_idx ON sightings (created_at DESC);
+
+-- Anonymous owner (X-Client-Id). Nullable: seeded sightings have no owner and can't be deleted.
+ALTER TABLE detections ADD COLUMN IF NOT EXISTS client_id uuid;
+CREATE INDEX IF NOT EXISTS detections_client_idx ON detections (client_id, created_at DESC);
+ALTER TABLE sightings ADD COLUMN IF NOT EXISTS client_id uuid;
 
 ALTER TABLE snakes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE detections ENABLE ROW LEVEL SECURITY;

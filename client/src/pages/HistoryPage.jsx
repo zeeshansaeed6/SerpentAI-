@@ -75,7 +75,10 @@ export default function HistoryPage() {
             </h2>
           </div>
           <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>
-            Review all previous snake identification scans and medical recommendations.
+            Review your previous snake identification scans and medical recommendations.
+          </p>
+          <p style={{ color: '#8aa395', fontSize: '0.78rem', margin: '0.4rem 0 0' }}>
+            Private to this browser: no one else can see your scans. Your newest 50 are kept, and clearing your browser data removes access to them.
           </p>
         </div>
 

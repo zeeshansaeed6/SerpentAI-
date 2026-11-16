@@ -24,7 +24,7 @@ function ScanStatus() {
 
 // Demo snake images for 1-click test, bundled in public/samples (no external hosts, CORS or rate limits)
 const SAMPLE_SNAKES = [
-  { name: 'King Cobra (Deadly)', url: '/samples/king-cobra.jpg', type: 'Venomous' },
+  { name: 'Cobra (Deadly)', url: '/samples/king-cobra.jpg', type: 'Venomous' }, // species left generic: the photo's exact species is unverified
   { name: 'Corn Snake (Harmless)', url: '/samples/corn-snake.jpg', type: 'Non-Venomous' },
   { name: 'Green Tree Python', url: '/samples/green-tree-python.jpg', type: 'Harmless' }
 ];

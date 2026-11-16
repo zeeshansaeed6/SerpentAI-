@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
-import { MapPin, Plus, AlertCircle, Skull, ShieldCheck, Calendar, User, RefreshCw, X, Radio, Camera } from 'lucide-react';
+import { MapPin, Plus, AlertCircle, Skull, ShieldCheck, Calendar, User, RefreshCw, X, Radio, Camera, Trash2 } from 'lucide-react';
 import { getSightings, createSighting, deleteSighting } from '../services/api';
 import { SEVERITY, severityOf } from '../utils/severity';
 import SeverityGlyph from './SeverityGlyph';
@@ -321,6 +321,18 @@ export default function SightingsMap() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                   <Calendar size={13} /> {new Date(item.createdAt).toLocaleDateString()}
+                  {item.mine && (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(item._id)}
+                      aria-label={`Delete my sighting of ${item.speciesName}`}
+                      title="Delete my report"
+                      className="btn btn-secondary"
+                      style={{ padding: '0.25rem 0.5rem', minHeight: '32px', marginLeft: '0.4rem', color: '#f87171' }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

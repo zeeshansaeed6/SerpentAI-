@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { connectDB, disconnectDB, ping } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
+const { attach: attachClientId } = require('./middleware/clientId');
 
 // Import routes
 const detectRoutes = require('./routes/detectRoutes');
@@ -49,6 +50,7 @@ app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : false }));
 
 app.use(express.json({ limit: '1mb' })); // uploads go through multer, not JSON
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+app.use(attachClientId); // anonymous per-browser id (X-Client-Id) for private history + sighting ownership
 
 // Gemini-backed routes cost money: cap per-IP usage
 const aiLimiter = rateLimit({

@@ -48,8 +48,9 @@ router.post('/', upload.single('image'), async (req, res, next) => {
       return res.status(200).json({ success: true, data: { ...result, imageData: imageDataUri } });
     }
 
-    // Save detection to database
-    const detection = await Detection.create({
+    // Save to this visitor's private history (a request without a valid client id is still analysed, just not saved)
+    const detection = !req.clientId ? null : await Detection.create({
+      clientId: req.clientId,
       imageData: imageDataUri,
       snakeName: result.snakeName || 'Unidentified snake',
       scientificName: result.scientificName,
@@ -68,7 +69,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: {
-        _id: detection._id,
+        _id: detection?._id,
         isSnake: result.isSnake,
         snakeName: result.snakeName,
         scientificName: result.scientificName,
@@ -83,7 +84,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
         firstAid: result.firstAid,
         funFact: result.funFact,
         imageData: imageDataUri,
-        createdAt: detection.createdAt
+        createdAt: detection?.createdAt ?? new Date().toISOString()
       }
     });
   } catch (error) {
