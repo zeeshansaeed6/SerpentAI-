@@ -222,6 +222,11 @@ textarea::placeholder {
   box-shadow: var(--shadow-md), 0 0 26px rgba(34, 211, 238, 0.16), inset 0 1px 0 var(--highlight);
 }
 
+/* Sticky header must stay legible over scrolling content */
+header.glass-panel {
+  background: rgba(6, 12, 20, 0.86);
+}
+
 /* HUD corner brackets: add alongside .glass-panel on hero surfaces */
 .hud-corners::after {
   content: '';

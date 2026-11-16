@@ -28,7 +28,7 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
         fontWeight: 600,
         marginBottom: '1.5rem'
       }}>
-        <Zap size={15} /> Powered by Multimodal Gemini Vision AI
+        <Zap size={15} /> Multimodal Gemini Vision AI
       </div>
 
       {/* Main Headline */}

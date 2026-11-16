@@ -16,15 +16,21 @@ import RescueDirectory from './components/RescueDirectory';
 export default function App() {
   const [activeTab, setActiveTab] = useState('scanner');
 
+  // Always land at the top of the new view
+  const goToTab = (tab) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0 });
+  };
+
   return (
     <div className="app-container">
       {/* Navigation Header */}
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar activeTab={activeTab} setActiveTab={goToTab} />
 
       {/* Main Content View based on activeTab */}
       <main className="main-content">
         {activeTab === 'scanner' && (
-          <HomePage onExploreGuide={() => setActiveTab('encyclopedia')} />
+          <HomePage onExploreGuide={() => goToTab('encyclopedia')} />
         )}
         {activeTab === 'bot' && <SerpentBot />}
         {activeTab === 'triage' && <SymptomTriage />}

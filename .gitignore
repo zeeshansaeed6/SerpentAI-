@@ -25,3 +25,6 @@ scratch/
 
 # graphify output
 graphify-out/
+
+# Browser-test artifacts
+.playwright-mcp/
