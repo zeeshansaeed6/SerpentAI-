@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { connectDB } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -18,17 +19,26 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors());
-app.use(express.json({ limit: '20mb' }));
-app.use(express.urlencoded({ extended: true, limit: '20mb' }));
+app.use(cors({ origin: (process.env.CLIENT_ORIGIN || 'http://localhost:5173').split(',') }));
+app.use(express.json({ limit: '1mb' })); // uploads go through multer, not JSON
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// Gemini-backed routes cost money: cap per-IP usage
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests. Please wait a minute and try again.' }
+});
 
 // Routes
-app.use('/api/detect', detectRoutes);
+app.use('/api/detect', aiLimiter, detectRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/snakes', snakeRoutes);
 app.use('/api/sightings', sightingRoutes);
 app.use('/api/hospitals', hospitalRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/api/chat', aiLimiter, chatRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -54,6 +64,9 @@ const startServer = async () => {
     console.log(`   DELETE /api/history/:id   — Delete detection`);
     console.log(`   GET    /api/snakes        — Get snake encyclopedia`);
     console.log(`   GET    /api/snakes/:id    — Get single snake species`);
+    console.log(`   *      /api/sightings     — Community sightings`);
+    console.log(`   GET    /api/hospitals     — Antivenom hospitals`);
+    console.log(`   POST   /api/chat          — SerpentBot chat`);
     console.log(`   GET    /api/health        — Health check\n`);
   });
 };

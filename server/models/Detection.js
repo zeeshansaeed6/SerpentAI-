@@ -21,6 +21,10 @@ const detectionSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  dangerLevel: {
+    type: String,
+    default: 'Harmless'
+  },
   description: {
     type: String,
     default: ''

@@ -34,10 +34,11 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Default server error
-  res.status(err.statusCode || 500).json({
+  // Default server error — never leak internals on 5xx
+  const status = err.statusCode || 500;
+  res.status(status).json({
     success: false,
-    message: err.message || 'Internal Server Error'
+    message: status >= 500 && !err.statusCode ? 'Internal Server Error' : err.message
   });
 };
 

@@ -43,6 +43,11 @@ router.post('/', upload.single('image'), async (req, res, next) => {
     const result = await analyzeSnakeImage(base64Data, mimeType);
     console.log('✅ Analysis complete:', result.snakeName);
 
+    // Don't pollute history with non-snake photos
+    if (!result.isSnake) {
+      return res.status(200).json({ success: true, data: { ...result, imageData: imageDataUri } });
+    }
+
     // Save detection to database
     const detection = new Detection({
       imageData: imageDataUri,
@@ -50,6 +55,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
       scientificName: result.scientificName,
       confidence: result.confidence,
       venomous: result.venomous,
+      dangerLevel: result.dangerLevel,
       description: result.description,
       habitat: result.habitat,
       region: result.region,

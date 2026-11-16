@@ -1,9 +1,9 @@
 const { GoogleGenAI } = require('@google/genai');
 
 const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const MODEL = 'gemini-3.6-flash';
 
-const analyzeSnakeImage = async (base64ImageData, mimeType) => {
-  const prompt = `You are an expert herpetologist AI assistant specializing in snake species identification. Analyze this image carefully.
+const IDENTIFY_PROMPT = `You are an expert herpetologist AI assistant specializing in snake species identification. Analyze this image carefully.
 
 If the image contains a snake, identify the species and provide detailed information. If the image does NOT contain a snake, respond accordingly.
 
@@ -42,33 +42,47 @@ If the image does NOT contain a snake, respond with:
   "funFact": "N/A"
 }`;
 
+const CHAT_INSTRUCTION = `You are "SerpentBot", an expert herpetologist and venom safety AI assistant.
+Your goal is to provide accurate, calm, scientifically verified, and safety-conscious information about snakes, snakebite prevention, emergency first-aid protocols, and reptile behavior.
+
+Critical Safety Directives:
+1. If a user describes an active or recent snakebite, prioritize immediate medical triage advice: stay calm, immobilize the limb, do NOT tourniquet/cut/suck, and call emergency services immediately (911/112/108/Poison Control).
+2. Never encourage handling wild snakes or attempting DIY venom extraction.
+3. Be concise, reassuring, clear, and format key steps with bullet points.
+4. Promote humane wildlife coexistence and dispel dangerous myths.`;
+
+// Models sometimes wrap JSON in fences or prose; keep only the outermost {...}.
+const extractJson = (text) => {
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start === -1 || end <= start) throw new Error('No JSON object in AI response');
+  return JSON.parse(text.slice(start, end + 1));
+};
+
+const analyzeSnakeImage = async (base64ImageData, mimeType) => {
   try {
     const interaction = await client.interactions.create({
-      model: 'gemini-3.6-flash',
+      model: MODEL,
       input: [
-        { type: 'text', text: prompt },
-        {
-          type: 'image',
-          data: base64ImageData,
-          mime_type: mimeType
-        }
+        { type: 'text', text: IDENTIFY_PROMPT },
+        { type: 'image', data: base64ImageData, mime_type: mimeType }
       ]
     });
-
-    const responseText = interaction.output_text;
-
-    // Clean the response - remove markdown code fences if present
-    let cleanedText = responseText
-      .replace(/```json\s*/gi, '')
-      .replace(/```\s*/g, '')
-      .trim();
-
-    const result = JSON.parse(cleanedText);
-    return result;
+    return extractJson(interaction.output_text || '');
   } catch (error) {
     console.error('Gemini API Error:', error.message);
-    throw new Error(`AI analysis failed: ${error.message}`);
+    const err = new Error('AI analysis failed. Please try again with a clearer image.');
+    err.statusCode = 502;
+    throw err;
   }
 };
 
-module.exports = { analyzeSnakeImage };
+const chat = async (message) => {
+  const interaction = await client.interactions.create({
+    model: MODEL,
+    input: [{ type: 'text', text: `${CHAT_INSTRUCTION}\n\nUser Question: ${message}` }]
+  });
+  return interaction.output_text || "I'm here to help with snake identification and safety. Please ask any question.";
+};
+
+module.exports = { analyzeSnakeImage, chat };

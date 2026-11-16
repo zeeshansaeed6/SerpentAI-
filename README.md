@@ -41,9 +41,6 @@ An intelligent, full-stack **MERN** web platform powered by **Multimodal Gemini 
 * **📄 Exportable Medical Incident PDF**:
   * Print-ready clinical dossier for ER doctors containing patient details, bite location, timestamp, and antivenom protocol.
 
-* **🌐 Multi-Language Support**:
-  * Instant switcher for **English 🇺🇸**, **Hindi 🇮🇳**, and **Spanish 🇪🇸**.
-
 ---
 
 ## 🏗️ Architecture & Tech Stack
