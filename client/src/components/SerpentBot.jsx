@@ -51,7 +51,8 @@ export default function SerpentBot() {
     {
       sender: 'bot',
       text: "Hello! I am SerpentBot, your AI Herpetologist and Snake Safety Assistant. Ask me anything about snake identification, bite first aid, venom symptoms, or home prevention tips.",
-      time: timeNow()
+      time: timeNow(),
+      greeting: true
     }
   ]);
   const [input, setInput] = useState('');
@@ -72,12 +73,26 @@ export default function SerpentBot() {
     const text = (textToSend || input).trim();
     if (!text || loading) return;
 
+    // Recent real exchanges (no greeting or error bubbles) give the AI context for follow-up questions
+    const history = messages
+      .filter((m) => !m.greeting && !m.isError)
+      .slice(-6)
+      .map((m) => ({ role: m.sender === 'user' ? 'user' : 'bot', text: m.text }));
+
     setMessages(prev => [...prev, { sender: 'user', text, time: timeNow() }]);
     setInput('');
     setLoading(true);
 
     try {
-      const res = await sendChatMessage(text);
+      let res;
+      try {
+        res = await sendChatMessage(text, history);
+      } catch (firstError) {
+        // One automatic retry for transient failures (busy AI, network blip); never for 4xx
+        const status = firstError?.response?.status;
+        if (status && status < 500) throw firstError;
+        res = await sendChatMessage(text, history);
+      }
       setMessages(prev => [
         ...prev,
         {
@@ -95,7 +110,7 @@ export default function SerpentBot() {
           sender: 'bot',
           text: rateLimited
             ? "You're sending messages quickly. Please wait a minute and try again. If this is an emergency, call 911 / 112 / 108 now."
-            : "I encountered a connection error. If you are experiencing an emergency, please call 911 / 112 / 108 immediately.",
+            : `${err?.response?.data?.message || 'I encountered a connection error.'} If you are experiencing an emergency, please call 911 / 112 / 108 immediately.`,
           time: timeNow(),
           isError: true
         }

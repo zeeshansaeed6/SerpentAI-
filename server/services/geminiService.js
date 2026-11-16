@@ -60,7 +60,9 @@ Critical Safety Directives:
 1. If a user describes an active or recent snakebite, prioritize immediate medical triage advice: stay calm, immobilize the limb, do NOT tourniquet/cut/suck, and call emergency services immediately (911/112/108/Poison Control).
 2. Never encourage handling wild snakes or attempting DIY venom extraction.
 3. Be concise, reassuring, clear, and format key steps with bullet points.
-4. Promote humane wildlife coexistence and dispel dangerous myths.`;
+4. Promote humane wildlife coexistence and dispel dangerous myths.
+5. Keep every reply under about 110 words: at most 6 short bullet points or 3 short sentences, most urgent action first, no headings and no emojis. Only go longer if the user asks for more detail.
+6. When a "Conversation so far" section is provided, use it to understand follow-up questions (e.g. "how long until it works?" refers to the situation already described).`;
 
 // Models sometimes wrap JSON in fences or prose; keep only the outermost {...}.
 const extractJson = (text) => {
@@ -77,7 +79,13 @@ const extractJson = (text) => {
 const HEDGE_AFTER_MS = Number(process.env.GEMINI_HEDGE_MS) || 8000;
 const OVERALL_DEADLINE_MS = Number(process.env.GEMINI_DEADLINE_MS) || 30000;
 
-const generate = (input, thinkingLevel, parse = (text) => text, maxOutputTokens) =>
+const generate = (input, {
+  thinkingLevel,
+  parse = (text) => text,
+  maxOutputTokens,
+  hedgeMs = HEDGE_AFTER_MS,
+  deadlineMs = OVERALL_DEADLINE_MS
+}) =>
   new Promise((resolve, reject) => {
     let nextModel = 0;
     let running = 0;
@@ -116,8 +124,8 @@ const generate = (input, thinkingLevel, parse = (text) => text, maxOutputTokens)
     };
 
     startNext();
-    timers.push(setTimeout(startNext, HEDGE_AFTER_MS));
-    timers.push(setTimeout(() => finish(reject, lastError), OVERALL_DEADLINE_MS));
+    timers.push(setTimeout(startNext, hedgeMs));
+    timers.push(setTimeout(() => finish(reject, lastError), deadlineMs));
   });
 
 // Rate limits, overload and timeouts mean "try again shortly", not "your photo was bad"
@@ -130,8 +138,7 @@ const analyzeSnakeImage = async (base64ImageData, mimeType) => {
         { type: 'text', text: IDENTIFY_PROMPT },
         { type: 'image', data: base64ImageData, mime_type: mimeType }
       ],
-      'minimal',
-      extractJson
+      { thinkingLevel: 'minimal', parse: extractJson }
     );
   } catch (error) {
     const busy = isBusy(error);
@@ -143,15 +150,29 @@ const analyzeSnakeImage = async (base64ImageData, mimeType) => {
   }
 };
 
-const chat = async (message) => {
-  // Minimal thinking and a token cap keep replies fast (the cap leaves room for a full first-aid list)
-  const reply = await generate(
-    [{ type: 'text', text: `${CHAT_INSTRUCTION}\n\nUser Question: ${message}` }],
-    'minimal',
-    undefined,
-    900
-  );
-  return reply || "I'm here to help with snake identification and safety. Please ask any question.";
+// `history` is the recent conversation, [{ role: 'user' | 'bot', text }], so follow-up questions make sense.
+// Short answers + minimal thinking measured ~5s steady, versus 5-33s for long answers; chat gets a tighter
+// deadline than scans so the browser can retry once within its own time limit.
+const chat = async (message, history = []) => {
+  const transcript = history.map((h) => `${h.role === 'user' ? 'User' : 'SerpentBot'}: ${h.text}`).join('\n');
+  const prompt = `${CHAT_INSTRUCTION}${transcript ? `\n\nConversation so far (context only):\n${transcript}` : ''}\n\nUser Question: ${message}`;
+
+  try {
+    const reply = await generate([{ type: 'text', text: prompt }], {
+      thinkingLevel: 'minimal',
+      maxOutputTokens: 600,
+      hedgeMs: 6000,
+      deadlineMs: 20000
+    });
+    return reply || "I'm here to help with snake identification and safety. Please ask any question.";
+  } catch (error) {
+    const busy = isBusy(error);
+    const err = new Error(busy
+      ? 'SerpentBot is busy right now. Please try again in a moment.'
+      : 'SerpentBot is temporarily unreachable. Please try again shortly.');
+    err.statusCode = busy ? 503 : 502;
+    throw err;
+  }
 };
 
 module.exports = { analyzeSnakeImage, chat };
