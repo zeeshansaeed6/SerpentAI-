@@ -4,6 +4,7 @@ services:
   - type: web
     name: serpentai
     runtime: node
+    region: singapore # same region as the Supabase database (ap-southeast-1) to keep queries fast
     plan: free # free instances sleep after ~15 min idle (first request is slow); use a paid plan for always-on
     buildCommand: npm run install-all && npm run build
     startCommand: npm start
