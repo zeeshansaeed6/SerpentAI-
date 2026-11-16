@@ -8,12 +8,10 @@ const MODELS = [
   process.env.GEMINI_FALLBACK_MODEL || 'gemini-3.1-flash-lite'
 ];
 
-// One attempt per model with a hard timeout: the SDK's silent retries made scans hang for minutes.
-// Worst case is 2 x 20s, under the browser's 45s limit.
-const ATTEMPT_TIMEOUT_MS = 20000;
+// No silent SDK retries: they made scans hang for minutes (see generate() for the real deadline)
 const client = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: { timeout: ATTEMPT_TIMEOUT_MS, retryOptions: { attempts: 1 } }
+  httpOptions: { timeout: 40000, retryOptions: { attempts: 1 } }
 });
 
 const IDENTIFY_PROMPT = `You are an expert herpetologist AI assistant specializing in snake species identification. Analyze this image carefully.
@@ -72,27 +70,55 @@ const extractJson = (text) => {
   return JSON.parse(text.slice(start, end + 1));
 };
 
-// Try each model in turn; a bad reply (not just an API error) also falls through to the next model
-const generate = async (input, thinkingLevel, parse = (text) => text, maxOutputTokens) => {
-  let lastError = new Error('No AI model available');
-  for (const model of MODELS) {
-    try {
-      const interaction = await client.interactions.create({
-        model,
-        input,
-        generation_config: {
-          thinking_level: thinkingLevel,
-          ...(maxOutputTokens && { max_output_tokens: maxOutputTokens })
-        }
-      });
-      return parse(interaction.output_text || '');
-    } catch (error) {
-      lastError = error;
-      console.error(`Gemini ${model} failed:`, String(error.message).slice(0, 160));
-    }
-  }
-  throw lastError;
-};
+// Gemini latency is spiky (the same call can take 5s or 60s+), so tail latency is bounded here:
+//  - an error or a bad reply moves straight on to the next model
+//  - a model that has not answered after HEDGE_AFTER_MS gets a parallel backup request (first good reply wins)
+//  - nothing waits past OVERALL_DEADLINE_MS, which stays under the browser's 45s limit
+const HEDGE_AFTER_MS = Number(process.env.GEMINI_HEDGE_MS) || 8000;
+const OVERALL_DEADLINE_MS = Number(process.env.GEMINI_DEADLINE_MS) || 30000;
+
+const generate = (input, thinkingLevel, parse = (text) => text, maxOutputTokens) =>
+  new Promise((resolve, reject) => {
+    let nextModel = 0;
+    let running = 0;
+    let settled = false;
+    let lastError = new Error('AI service timed out');
+    const timers = [];
+
+    const finish = (settle, value) => {
+      if (settled) return;
+      settled = true;
+      timers.forEach(clearTimeout);
+      settle(value);
+    };
+
+    const startNext = () => {
+      if (settled || nextModel >= MODELS.length) return false;
+      const model = MODELS[nextModel++];
+      running += 1;
+      client.interactions
+        .create({
+          model,
+          input,
+          generation_config: {
+            thinking_level: thinkingLevel,
+            ...(maxOutputTokens && { max_output_tokens: maxOutputTokens })
+          }
+        })
+        .then((interaction) => finish(resolve, parse(interaction.output_text || '')))
+        .catch((error) => {
+          lastError = error;
+          console.error(`Gemini ${model} failed:`, String(error.message).slice(0, 160));
+          running -= 1;
+          if (running === 0 && !startNext()) finish(reject, lastError);
+        });
+      return true;
+    };
+
+    startNext();
+    timers.push(setTimeout(startNext, HEDGE_AFTER_MS));
+    timers.push(setTimeout(() => finish(reject, lastError), OVERALL_DEADLINE_MS));
+  });
 
 // Rate limits, overload and timeouts mean "try again shortly", not "your photo was bad"
 const isBusy = (error) => /429|503|rate limit|high demand|overloaded|timeout|timed out|abort/i.test(String(error?.message));
