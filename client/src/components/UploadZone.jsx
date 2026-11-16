@@ -1,7 +1,26 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { UploadCloud, Camera, RefreshCw, Sparkles, Image as ImageIcon, AlertCircle, Video, CheckCircle, Sliders, Sun, Moon } from 'lucide-react';
 import { detectSnake } from '../services/api';
 import { prepareImage } from '../utils/prepareImage';
+
+const SCAN_STEPS = [
+  'Reading scale pattern…',
+  'Mapping head geometry…',
+  'Matching 3,500+ species…',
+  'Rating venom hazard…'
+];
+
+// Cycles through what the scanner is "doing" while the request is in flight
+function ScanStatus() {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setStep((current) => (current + 1) % SCAN_STEPS.length), 1400);
+    return () => clearInterval(id);
+  }, []);
+
+  return <span aria-live="polite">{SCAN_STEPS[step]}</span>;
+}
 
 // Demo snake images for 1-click test, bundled in public/samples (no external hosts, CORS or rate limits)
 const SAMPLE_SNAKES = [
@@ -345,9 +364,10 @@ export default function UploadZone({ onDetectionComplete }) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
+                    whiteSpace: 'nowrap',
                     border: '1px solid rgba(16, 185, 129, 0.4)'
                   }}>
-                    <RefreshCw className="animate-spin" size={16} /> Scanning with Gemini Vision...
+                    <RefreshCw className="animate-spin" size={16} /> <ScanStatus />
                   </div>
                 </div>
               )}

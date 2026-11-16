@@ -514,10 +514,10 @@ header.glass-panel {
   50%      { box-shadow: 0 0 26px rgba(239, 68, 68, 0.8); }
 }
 
-@keyframes scan-line {
-  0%   { top: 0%;  opacity: 0.85; }
-  50%  { opacity: 1; }
-  100% { top: 98%; opacity: 0.85; }
+/* Sweep is a transform on a full-height layer whose bottom edge is the beam: no layout per frame */
+@keyframes scan-sweep {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
 }
 
 /* Hero serpents: two thermal strokes travelling along one path (pathLength normalised to 1000) */
@@ -599,15 +599,30 @@ header.glass-panel {
   border-radius: inherit;
 }
 
-/* The scan beam is a heat read-out: thermal gradient with an ember glow */
+/* The scan beam is a heat read-out: a thermal line with a warm wake trailing behind it */
 .scan-beam {
+  position: absolute;
+  inset: 0;
+  /* wake: heat that fades out above the line */
+  background: linear-gradient(to top, rgba(249, 115, 22, 0.22), rgba(162, 28, 175, 0.08) 18%, transparent 38%);
+  animation: scan-sweep 2.2s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.scan-beam::after {
+  content: '';
   position: absolute;
   left: 0;
   right: 0;
+  bottom: 0;
   height: 3px;
   background: linear-gradient(90deg, transparent, #a21caf, #f97316, #fde047, #f97316, #a21caf, transparent);
   box-shadow: 0 0 18px rgba(249, 115, 22, 0.75), 0 0 44px rgba(249, 115, 22, 0.35);
-  animation: scan-line 2.2s ease-in-out infinite alternate;
+}
+
+/* Venomous banner: slow danger pulse so it reads as an alert, not decoration */
+.rc-banner--danger {
+  animation: pulse-danger 2.6s ease-in-out infinite;
 }
 
 /* ---------- Gradient text ---------- */

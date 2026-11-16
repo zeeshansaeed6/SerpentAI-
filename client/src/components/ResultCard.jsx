@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { 
   AlertTriangle, ShieldCheck, Volume2, VolumeX, HeartPulse, 
   MapPin, Compass, Utensils, Lightbulb, RotateCcw, Share2, 
@@ -7,6 +9,8 @@ import {
 import MedicalReportModal from './MedicalReportModal';
 import { getHospitals } from '../services/api';
 import { calculateDistance } from '../utils/distance';
+
+gsap.registerPlugin(useGSAP);
 
 export default function ResultCard({ result, onScanAgain }) {
   const [speaking, setSpeaking] = useState(false);
@@ -18,11 +22,29 @@ export default function ResultCard({ result, onScanAgain }) {
   const [userLocation, setUserLocation] = useState(null);
   const [loadingHospitals, setLoadingHospitals] = useState(false);
   const [locationStatus, setLocationStatus] = useState('Detecting your location...');
+  const root = useRef(null);
 
   // Auto-detect user GPS and find nearest antivenom centers
   useEffect(() => {
     fetchNearbyEmergencyHospitals();
   }, [result]);
+
+  // Staged reveal of the dossier: banner → photo → name → details → meter fill → info cards.
+  // Transform/opacity only; reduced-motion users see the final state immediately.
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const tl = gsap.timeline({ defaults: { duration: 0.6, ease: 'power3.out' } });
+      tl.from('.rc-banner', { y: -18, opacity: 0, duration: 0.5 })
+        .from('.rc-image', { scale: 0.94, opacity: 0, duration: 0.8 }, '<0.1')
+        .from('.rc-title', { y: 22, opacity: 0 }, '<0.15')
+        .from('.rc-latin', { y: 14, opacity: 0 }, '<0.12')
+        .from('.rc-desc', { y: 14, opacity: 0 }, '<0.1')
+        .from('.rc-meter-fill', { scaleX: 0, transformOrigin: 'left center', duration: 1.1, ease: 'power3.inOut' }, '-=0.3')
+        .from('.rc-chip', { y: 14, opacity: 0, duration: 0.5, stagger: 0.08 }, '<0.2');
+    });
+  }, { scope: root, dependencies: [result] });
 
   // Early return must come after all hooks (rules of hooks)
   if (!result) return null;
@@ -115,10 +137,10 @@ export default function ResultCard({ result, onScanAgain }) {
 
   return (
     <>
-      <div style={{ maxWidth: '980px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div ref={root} style={{ maxWidth: '980px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Alert Header Banner if Venomous */}
         {isVenomous ? (
-          <div style={{
+          <div className="rc-banner rc-banner--danger" style={{
             background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.35))',
             border: '1px solid rgba(239, 68, 68, 0.5)',
             borderRadius: '16px',
@@ -154,7 +176,7 @@ export default function ResultCard({ result, onScanAgain }) {
             </span>
           </div>
         ) : (
-          <div style={{
+          <div className="rc-banner" style={{
             background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.2))',
             border: '1px solid rgba(16, 185, 129, 0.4)',
             borderRadius: '16px',
@@ -200,7 +222,7 @@ export default function ResultCard({ result, onScanAgain }) {
           }}>
             {/* Left Column: Image & Confidence Meter */}
             <div>
-              <div style={{
+              <div className="rc-image" style={{
                 borderRadius: '18px',
                 overflow: 'hidden',
                 background: '#000',
@@ -231,7 +253,7 @@ export default function ResultCard({ result, onScanAgain }) {
                   </span>
                 </div>
                 <div style={{ height: '8px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '999px', overflow: 'hidden' }}>
-                  <div style={{
+                  <div className="rc-meter-fill" style={{
                     height: '100%',
                     width: result.confidence === 'High' ? '98%' : result.confidence === 'Medium' ? '85%' : '65%',
                     background: 'linear-gradient(90deg, #10b981, #34d399)',
@@ -281,10 +303,10 @@ export default function ResultCard({ result, onScanAgain }) {
               {/* Header & TTS button */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <div>
-                  <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '0.2rem' }}>
+                  <h2 className="rc-title" style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '0.2rem' }}>
                     {result.snakeName}
                   </h2>
-                  <div className="latin" style={{ color: '#6ee7b7', fontSize: '1.25rem' }}>
+                  <div className="latin rc-latin" style={{ color: '#6ee7b7', fontSize: '1.25rem' }}>
                     {result.scientificName}
                   </div>
                 </div>
@@ -307,7 +329,7 @@ export default function ResultCard({ result, onScanAgain }) {
               </div>
 
               {/* Description */}
-              <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              <p className="rc-desc" style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
                 {result.description}
               </p>
 
@@ -318,14 +340,14 @@ export default function ResultCard({ result, onScanAgain }) {
                 gap: '0.85rem',
                 marginBottom: '1.5rem'
               }}>
-                <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+                <div className="rc-chip" style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                     <MapPin size={14} color="#34d399" /> HABITAT
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#fff', fontWeight: 600 }}>{result.habitat || 'Forests, Grasslands'}</div>
                 </div>
 
-                <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+                <div className="rc-chip" style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                     <Compass size={14} color="#06b6d4" /> GEOGRAPHIC REGION
                   </div>
@@ -333,7 +355,7 @@ export default function ResultCard({ result, onScanAgain }) {
                 </div>
 
                 {result.diet && (
-                  <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+                  <div className="rc-chip" style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                       <Utensils size={14} color="#facc15" /> DIET & PREY
                     </div>
@@ -343,7 +365,7 @@ export default function ResultCard({ result, onScanAgain }) {
               </div>
 
               {/* First Aid Protocol */}
-              <div style={{
+              <div className="rc-chip" style={{
                 background: isVenomous ? 'rgba(239, 68, 68, 0.08)' : 'rgba(16, 185, 129, 0.08)',
                 border: isVenomous ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)',
                 borderRadius: '14px',
@@ -367,7 +389,7 @@ export default function ResultCard({ result, onScanAgain }) {
 
               {/* Fun Fact */}
               {result.funFact && (
-                <div style={{
+                <div className="rc-chip" style={{
                   background: 'rgba(250, 204, 21, 0.08)',
                   border: '1px solid rgba(250, 204, 21, 0.25)',
                   borderRadius: '14px',
