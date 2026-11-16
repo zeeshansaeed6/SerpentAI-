@@ -924,8 +924,57 @@ header.glass-panel {
 
 .map-toolbar {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
   margin-bottom: 0.75rem;
+}
+
+.map-zoom {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.map-zoom-btn {
+  width: 36px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--border-glass);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.map-zoom-btn:hover:not(:disabled) {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: var(--border-glow);
+}
+
+.map-zoom-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.map-hint {
+  margin: 0.6rem 0 0;
+  padding: 0 0.25rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+@media (pointer: coarse) {
+  .map-hint { display: none; } /* drag/ctrl-scroll hints are mouse-only */
+}
+
+.map-cluster-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
 }
 
 .map-regions {
@@ -973,6 +1022,12 @@ header.glass-panel {
   width: 100%;
   height: auto;
   aspect-ratio: 2 / 1;
+  cursor: grab;
+  user-select: none;
+}
+
+.map-svg:active {
+  cursor: grabbing;
 }
 
 /* Solid hairlines that stay 1px at any zoom */
