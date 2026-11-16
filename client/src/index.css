@@ -1,25 +1,33 @@
 /* ==========================================================================
-   SerpentAI theme — deep-forest dark UI, emerald accent, refined glass
+   SerpentAI — "Neo-HUD" theme
+   Near-black canvas, electric cyan + emerald neon, holographic gradients,
+   glowing hairline borders, HUD corner brackets, drifting aurora lighting.
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
   /* Surfaces */
-  --bg-main: #070a0f;
-  --bg-card: rgba(17, 24, 34, 0.72);
-  --bg-card-hover: rgba(24, 34, 48, 0.88);
-  --bg-glass: rgba(13, 19, 28, 0.62);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(16, 185, 129, 0.35);
-  --highlight: rgba(255, 255, 255, 0.05); /* top-edge sheen on glass */
+  --bg-main: #04070c;
+  --bg-card: rgba(10, 18, 30, 0.66);
+  --bg-card-hover: rgba(14, 26, 42, 0.84);
+  --bg-glass: rgba(8, 15, 26, 0.58);
+  --border-glass: rgba(120, 200, 255, 0.12);
+  --border-glow: rgba(34, 211, 238, 0.45);
+  --highlight: rgba(180, 235, 255, 0.06); /* top-edge sheen on glass */
 
-  /* Brand */
+  /* Neon palette */
+  --cyan-300: #67e8f9;
+  --cyan-400: #22d3ee;
+  --cyan-500: #06b6d4;
+  --cyan-600: #0891b2;
   --emerald-300: #6ee7b7;
   --emerald-400: #34d399;
   --emerald-500: #10b981;
   --emerald-600: #059669;
+  --violet-400: #a78bfa;
   --emerald-glow: rgba(16, 185, 129, 0.38);
+  --cyan-glow: rgba(34, 211, 238, 0.38);
 
   /* Signal colors */
   --toxic-lime: #a3e635;
@@ -30,9 +38,9 @@
   --safe-cyan: #06b6d4;
 
   /* Text */
-  --text-primary: #f1f5f9;
-  --text-secondary: #a3b1c6;
-  --text-muted: #6b7a90;
+  --text-primary: #e8f1fb;
+  --text-secondary: #9db2cb;
+  --text-muted: #667c94;
 
   /* Shape & depth */
   --radius-sm: 8px;
@@ -40,12 +48,14 @@
   --radius-lg: 20px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 12px 28px -8px rgba(0, 0, 0, 0.55), 0 4px 8px -4px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
-  --shadow-neon: 0 0 28px var(--emerald-glow);
+  --shadow-sm: 0 2px 10px -2px rgba(0, 0, 0, 0.55);
+  --shadow-md: 0 14px 32px -10px rgba(0, 0, 0, 0.65), 0 4px 10px -4px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 28px 56px -14px rgba(0, 0, 0, 0.7), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
+  --shadow-neon: 0 0 28px var(--cyan-glow);
   --shadow-danger: 0 0 28px var(--danger-glow);
 
+  --font-display: 'Space Grotesk', 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -69,38 +79,49 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image:
-    radial-gradient(60rem 40rem at 12% -5%, rgba(16, 185, 129, 0.10), transparent 60%),
-    radial-gradient(50rem 35rem at 95% 105%, rgba(6, 182, 212, 0.08), transparent 60%),
-    radial-gradient(40rem 30rem at 50% 50%, rgba(239, 68, 68, 0.025), transparent 70%);
-  background-attachment: fixed;
 }
 
-/* Faint scale-pattern grid behind everything, fading out toward the edges */
+/* Layer 1: drifting aurora lighting (cyan / emerald / violet) */
 body::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 28rem at 18% 12%, rgba(34, 211, 238, 0.13), transparent 65%),
+    radial-gradient(34rem 26rem at 88% 78%, rgba(16, 185, 129, 0.12), transparent 65%),
+    radial-gradient(28rem 22rem at 70% 18%, rgba(167, 139, 250, 0.08), transparent 65%);
+  animation: aurora-drift 32s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Layer 2: HUD grid that fades toward the edges */
+body::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 44px 44px;
-  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%);
-  mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%);
+    linear-gradient(rgba(120, 200, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 200, 255, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 25%, #000 15%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 25%, #000 15%, transparent 72%);
+  animation: grid-drift 60s linear infinite;
 }
 
 ::selection {
-  background: rgba(16, 185, 129, 0.35);
+  background: rgba(34, 211, 238, 0.35);
   color: #fff;
 }
 
 h1, h2, h3, h4, h5, h6, .brand-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
 
 button, input, select, textarea {
@@ -111,9 +132,14 @@ img {
   max-width: 100%;
 }
 
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
 /* Accessible, on-brand focus indicators */
 :focus-visible {
-  outline: 2px solid var(--emerald-400);
+  outline: 2px solid var(--cyan-400);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -122,8 +148,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--emerald-500) !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  border-color: var(--cyan-400) !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18), 0 0 18px rgba(34, 211, 238, 0.12);
 }
 
 input::placeholder,
@@ -133,10 +159,41 @@ textarea::placeholder {
 
 /* ---------- Surfaces ---------- */
 
+/* Panels get a gradient hairline border (drawn with a masked ::before) */
+.glass-panel,
+.glass-card {
+  position: relative;
+}
+
+.glass-panel::before,
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg,
+    rgba(34, 211, 238, 0.42),
+    rgba(255, 255, 255, 0.05) 38%,
+    rgba(255, 255, 255, 0.03) 62%,
+    rgba(16, 185, 129, 0.38));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0.7;
+  transition: opacity 0.35s var(--ease);
+}
+
+.glass-panel:hover::before,
+.glass-card:hover::before {
+  opacity: 1;
+}
+
 .glass-panel {
   background: var(--bg-glass);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md), inset 0 1px 0 var(--highlight);
@@ -144,13 +201,13 @@ textarea::placeholder {
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: var(--shadow-md), 0 0 30px rgba(34, 211, 238, 0.06), inset 0 1px 0 var(--highlight);
 }
 
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm), inset 0 1px 0 var(--highlight);
@@ -162,7 +219,29 @@ textarea::placeholder {
   background: var(--bg-card-hover);
   border-color: var(--border-glow);
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md), 0 0 22px rgba(16, 185, 129, 0.14), inset 0 1px 0 var(--highlight);
+  box-shadow: var(--shadow-md), 0 0 26px rgba(34, 211, 238, 0.16), inset 0 1px 0 var(--highlight);
+}
+
+/* HUD corner brackets: add alongside .glass-panel on hero surfaces */
+.hud-corners::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  --c: var(--cyan-400);
+  --l: 16px;
+  --t: 2px;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) var(--t) no-repeat,
+    linear-gradient(var(--c), var(--c)) top left / var(--t) var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / var(--l) var(--t) no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / var(--t) var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) var(--t) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / var(--t) var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) var(--t) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / var(--t) var(--l) no-repeat;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 4px var(--cyan-400));
 }
 
 /* ---------- Layout ---------- */
@@ -186,12 +265,14 @@ textarea::placeholder {
 /* Soft entrance whenever a tab mounts */
 .main-content > * {
   /* `backwards`, not `both`: a retained transform would become the containing block for fixed modals */
-  animation: fade-up 0.5s var(--ease) backwards;
+  animation: fade-up 0.55s var(--ease) backwards;
 }
 
 /* ---------- Buttons ---------- */
 
 .btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -219,21 +300,40 @@ textarea::placeholder {
   box-shadow: none;
 }
 
+/* Light sweep across solid buttons on hover */
+.btn-primary::after,
+.btn-danger::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s var(--ease);
+}
+
+.btn-primary:hover:not(:disabled)::after,
+.btn-danger:hover:not(:disabled)::after {
+  transform: translateX(120%);
+}
+
 .btn-primary {
-  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+  background: linear-gradient(135deg, var(--cyan-600), var(--emerald-600));
   color: #fff;
-  box-shadow: 0 4px 16px var(--emerald-glow), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  border-color: rgba(103, 232, 249, 0.35);
+  box-shadow: 0 4px 20px var(--cyan-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--emerald-400), var(--emerald-500));
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, var(--cyan-500), var(--emerald-500));
+  box-shadow: 0 8px 30px rgba(34, 211, 238, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
 .btn-danger {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
   color: #fff;
+  border-color: rgba(252, 165, 165, 0.3);
   box-shadow: 0 4px 16px var(--danger-glow), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   animation: pulse-danger 2.4s ease-in-out infinite;
 }
@@ -245,29 +345,30 @@ textarea::placeholder {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(120, 200, 255, 0.06);
   color: var(--text-primary);
   border-color: var(--border-glass);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.11);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(34, 211, 238, 0.1);
+  border-color: var(--border-glow);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.14);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--emerald-400);
-  border-color: var(--emerald-500);
+  color: var(--cyan-300);
+  border-color: rgba(34, 211, 238, 0.55);
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(34, 211, 238, 0.12);
   color: #fff;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
 }
 
-/* ---------- Badges ---------- */
+/* ---------- Badges (mono HUD tags) ---------- */
 
 .badge {
   display: inline-flex;
@@ -275,42 +376,76 @@ textarea::placeholder {
   gap: 0.35rem;
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-full);
-  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .badge-deadly {
   background: rgba(239, 68, 68, 0.15);
   color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.22);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.25);
 }
 
 .badge-dangerous {
   background: rgba(245, 158, 11, 0.15);
   color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
 }
 
 .badge-harmless {
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
 }
 
 .badge-moderate {
   background: rgba(234, 179, 8, 0.15);
   color: #facc15;
-  border: 1px solid rgba(234, 179, 8, 0.4);
+  border: 1px solid rgba(234, 179, 8, 0.45);
+}
+
+/* Live "system online" indicator */
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald-400);
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  animation: status-ping 2s ease-out infinite;
 }
 
 /* ---------- Motion ---------- */
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aurora-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(3%, 2%, 0) scale(1.08); }
+}
+
+@keyframes grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 48px 48px, 48px 48px; }
+}
+
+@keyframes holo-shift {
+  to { background-position: 300% 50%; }
+}
+
+@keyframes status-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+  70%  { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
 }
 
 @keyframes pulse-danger {
@@ -337,18 +472,21 @@ textarea::placeholder {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--emerald-400), #fff, var(--emerald-400), transparent);
-  box-shadow: 0 0 15px var(--emerald-400), 0 0 30px var(--emerald-500);
+  background: linear-gradient(90deg, transparent, var(--cyan-400), #fff, var(--cyan-400), transparent);
+  box-shadow: 0 0 16px var(--cyan-400), 0 0 34px var(--cyan-500);
   animation: scan-line 2.2s ease-in-out infinite alternate;
 }
 
 /* ---------- Gradient text ---------- */
 
+/* Holographic: slowly cycling cyan → emerald → violet */
 .text-gradient-emerald {
-  background: linear-gradient(135deg, #a7f3d0 0%, #10b981 50%, #059669 100%);
+  background: linear-gradient(100deg, #67e8f9, #34d399, #a78bfa, #67e8f9);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: holo-shift 9s linear infinite;
 }
 
 .text-gradient-fire {
@@ -362,7 +500,7 @@ textarea::placeholder {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #243044 transparent;
+  scrollbar-color: #1d3a4d transparent;
 }
 
 ::-webkit-scrollbar {
@@ -373,11 +511,11 @@ textarea::placeholder {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #243044;
+  background: #1d3a4d;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #36445c;
+  background: #2a5670;
 }
 
 /* ---------- Responsive ---------- */
@@ -388,7 +526,18 @@ textarea::placeholder {
   gap: 1.5rem;
 }
 
-/* With 12 tabs the inline nav overflows below ~1180px: swap to the hamburger menu.
+/* 12 tabs only fit with full labels on very wide screens; otherwise show icons
+   (full name via tooltip) and keep the label for the active tab only. */
+@media (max-width: 1899px) {
+  .desktop-nav .nav-btn:not(.active) .nav-label { display: none; }
+}
+
+.desktop-nav .nav-btn:hover:not(.active) {
+  background: rgba(34, 211, 238, 0.08) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Below 1180px the inline nav swaps to the hamburger menu.
    !important is needed because Navbar sets display inline. */
 @media (max-width: 1180px) {
   .desktop-nav { display: none !important; }
@@ -401,23 +550,12 @@ textarea::placeholder {
   }
 }
 
-/* 12 tabs only fit with full labels on very wide screens; otherwise show icons
-   (full name via tooltip) and keep the label for the active tab only. */
-@media (max-width: 1899px) {
-  .desktop-nav .nav-btn:not(.active) .nav-label { display: none; }
-}
-
-.desktop-nav .nav-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: var(--text-primary) !important;
-}
-
 /* Keep the header from crowding the SOS button on phones */
 @media (max-width: 600px) {
   .brand-tagline { display: none; }
 }
 
-/* ---------- Accessibility ---------- */
+/* ---------- Accessibility & print ---------- */
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -426,4 +564,10 @@ textarea::placeholder {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+@media print {
+  body::before, body::after,
+  .glass-panel::before, .glass-card::before,
+  .hud-corners::after { display: none !important; }
 }
