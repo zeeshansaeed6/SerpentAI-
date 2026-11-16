@@ -214,7 +214,7 @@ export default function ResultCard({ result, onScanAgain }) {
 
         {/* Main Dossier Card */}
         <div className="glass-panel" style={{ padding: '2rem', borderRadius: '24px', position: 'relative' }}>
-          <div style={{
+          <div className="stack-md" style={{
             display: 'grid',
             gridTemplateColumns: 'minmax(280px, 340px) 1fr',
             gap: '2rem',

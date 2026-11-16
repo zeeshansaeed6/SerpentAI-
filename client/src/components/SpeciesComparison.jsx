@@ -148,7 +148,7 @@ export default function SpeciesComparison() {
       </div>
 
       {/* Side by Side Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div className="stack-md" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
         {/* Venomous Species A */}
         <div className="glass-panel" style={{
           padding: '1.5rem',

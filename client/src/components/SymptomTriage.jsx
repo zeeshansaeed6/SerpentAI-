@@ -1,7 +1,28 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Activity, AlertTriangle, ShieldCheck, HeartPulse, CheckCircle2, Clock, RotateCcw, Printer, PhoneCall } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import AnimatedNumber from './AnimatedNumber';
+
+gsap.registerPlugin(useGSAP);
 
 export default function SymptomTriage() {
+  const root = useRef(null);
+
+  // Entrance: header, questionnaire, then the result panel
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from(['.tr-head', '.tr-form', '.tr-result'], {
+        y: 26,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.12
+      });
+    });
+  }, { scope: root });
+
   const [biteMark, setBiteMark] = useState('two_fangs');
   const [timeElapsed, setTimeElapsed] = useState('under_30m');
   const [localSymptoms, setLocalSymptoms] = useState({
@@ -26,7 +47,7 @@ export default function SymptomTriage() {
     setSystemicSymptoms(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Calculate Envenomation Risk Score
+  // Calculate Envenomation Risk Score (weights sum to 205, so clamp to the displayed /100 scale)
   let score = 0;
   if (biteMark === 'two_fangs') score += 40;
   else if (biteMark === 'single_fang') score += 25;
@@ -42,13 +63,15 @@ export default function SymptomTriage() {
   if (systemicSymptoms.gumBleeding) score += 30;
   if (systemicSymptoms.nauseaDizziness) score += 10;
 
+  score = Math.min(score, 100);
+
   const isCritical = score >= 65;
   const isModerate = score >= 35 && score < 65;
 
   return (
-    <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div ref={root} style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Header Banner */}
-      <div className="glass-panel" style={{ padding: '2rem', borderRadius: '20px' }}>
+      <div className="glass-panel tr-head" style={{ padding: '2rem', borderRadius: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
           <div style={{
             background: 'rgba(239, 68, 68, 0.15)',
@@ -69,9 +92,9 @@ export default function SymptomTriage() {
       </div>
 
       {/* Triage Questionnaire & Results */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="stack-md" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.5rem', alignItems: 'start' }}>
         {/* Input Form */}
-        <div className="glass-panel" style={{ padding: '1.75rem', borderRadius: '20px', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div className="glass-panel tr-form" style={{ padding: '1.75rem', borderRadius: '20px', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {/* Section 1: Bite Mark Pattern */}
           <div>
             <label style={{ fontSize: '0.85rem', color: '#34d399', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
@@ -205,7 +228,7 @@ export default function SymptomTriage() {
         </div>
 
         {/* Output Assessment Card */}
-        <div className="glass-panel" style={{
+        <div className="glass-panel tr-result" style={{
           padding: '1.75rem',
           borderRadius: '20px',
           border: isCritical ? '1px solid rgba(239, 68, 68, 0.5)' : isModerate ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid rgba(16, 185, 129, 0.4)',
@@ -213,7 +236,9 @@ export default function SymptomTriage() {
         }}>
           <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
             <div style={{
-              display: 'inline-block',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
               padding: '0.35rem 1rem',
               borderRadius: '999px',
               fontWeight: 800,
@@ -224,12 +249,25 @@ export default function SymptomTriage() {
               color: isCritical ? '#f87171' : isModerate ? '#fbbf24' : '#34d399',
               border: isCritical ? '1px solid #ef4444' : isModerate ? '1px solid #f59e0b' : '1px solid #10b981'
             }}>
-              {isCritical ? '🚨 RED ALERT: HIGH ENVENOMATION RISK' : isModerate ? '⚠️ YELLOW ALERT: MODERATE RISK' : '🛡️ GREEN ALERT: LOW ENVENOMATION RISK'}
+              {isCritical
+                ? <><AlertTriangle size={15} /> RED ALERT: HIGH ENVENOMATION RISK</>
+                : isModerate
+                  ? <><AlertTriangle size={15} /> YELLOW ALERT: MODERATE RISK</>
+                  : <><ShieldCheck size={15} /> GREEN ALERT: LOW ENVENOMATION RISK</>}
             </div>
 
             <h3 style={{ fontSize: '1.6rem', color: '#fff', margin: 0 }}>
-              Estimated Risk: {score} / 100
+              Estimated Risk: <AnimatedNumber value={score} /> / 100
             </h3>
+
+            {/* Risk gauge: marker glides along a green → amber → red scale as symptoms change */}
+            <div className="risk-gauge" role="img" aria-label={`Estimated risk ${score} out of 100`}>
+              <div className="risk-gauge__track" />
+              <div className="risk-gauge__marker" style={{ left: `${score}%` }} />
+            </div>
+            <div className="risk-gauge__scale" aria-hidden="true">
+              <span>Low</span><span>Moderate</span><span>Critical</span>
+            </div>
           </div>
 
           <div style={{

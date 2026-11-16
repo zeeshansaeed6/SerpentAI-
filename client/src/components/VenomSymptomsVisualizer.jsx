@@ -135,7 +135,7 @@ export default function VenomSymptomsVisualizer() {
       </div>
 
       {/* Main Analysis Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1fr) 1.2fr', gap: '1.5rem' }}>
+      <div className="stack-md" style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1fr) 1.2fr', gap: '1.5rem' }}>
         {/* Left: Target Organ Impact */}
         <div className="glass-panel" style={{ padding: '1.75rem', borderRadius: '20px' }}>
           <div style={{ marginBottom: '1.25rem' }}>
