@@ -15,6 +15,21 @@ import RescueDirectory from './components/RescueDirectory';
 import SerpentMark from './components/SerpentMark';
 import { usePointerGlow } from './hooks/usePointerGlow';
 
+// Screen-reader page titles (the scanner tab has a visible <h1> in its hero)
+const TAB_TITLES = {
+  bot: 'SerpentBot AI Herpetologist',
+  triage: 'Snakebite Symptom Triage',
+  prevention: 'Snake-Proofing and Prevention Guide',
+  rescue: 'Snake Rescuers and Wildlife Helplines',
+  sightings: 'Community Snake Sightings and Danger Radar',
+  compare: 'Lookalike Mimic Analyzer',
+  hospitals: 'Antivenom Hospital Locator',
+  simulator: 'Venom Pathology Simulator',
+  encyclopedia: 'Reptile and Snake Encyclopedia',
+  history: 'Your Scan History',
+  quiz: 'Snake Identification and Safety Quiz'
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('scanner');
   usePointerGlow();
@@ -32,6 +47,7 @@ export default function App() {
 
       {/* Main Content View based on activeTab */}
       <main className="main-content">
+        {TAB_TITLES[activeTab] && <h1 className="sr-only">{TAB_TITLES[activeTab]}</h1>}
         {activeTab === 'scanner' && (
           <HomePage onExploreGuide={() => goToTab('encyclopedia')} />
         )}

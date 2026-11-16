@@ -53,6 +53,14 @@ export default function SightingsMap() {
     document.getElementById(`sighting-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
+  // Escape closes the report form
+  useEffect(() => {
+    if (!isModalOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') setIsModalOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isModalOpen]);
+
   useEffect(() => {
     if (!highlightId) return undefined;
     const timer = setTimeout(() => setHighlightId(null), 1800);
@@ -356,7 +364,7 @@ export default function SightingsMap() {
           zIndex: 9999,
           padding: '1rem'
         }}>
-          <div className="glass-panel" style={{
+          <div className="glass-panel" role="dialog" aria-modal="true" aria-labelledby="sighting-title" style={{
             maxWidth: '560px',
             width: '100%',
             maxHeight: '90vh',
@@ -366,6 +374,7 @@ export default function SightingsMap() {
             position: 'relative'
           }}>
             <button
+              aria-label="Close report form"
               onClick={() => setIsModalOpen(false)}
               style={{
                 position: 'absolute',
@@ -386,7 +395,7 @@ export default function SightingsMap() {
               <X size={18} />
             </button>
 
-            <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '0.3rem' }}>
+            <h3 id="sighting-title" aria-level={2} style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '0.3rem' }}>
               📍 Report Snake Sighting
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
@@ -395,12 +404,12 @@ export default function SightingsMap() {
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                <label htmlFor="sighting-species" style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
                   Species Name *
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. King Cobra, Rattlesnake, Garden Snake"
+                  id="sighting-species" placeholder="e.g. King Cobra, Rattlesnake, Garden Snake"
                   value={formData.speciesName}
                   onChange={(e) => setFormData({ ...formData, speciesName: e.target.value })}
                   required
@@ -418,10 +427,11 @@ export default function SightingsMap() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                  <label htmlFor="sighting-toxicity" style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
                     Toxicity Type
                   </label>
                   <select
+                    id="sighting-toxicity"
                     value={formData.venomous ? 'true' : 'false'}
                     onChange={(e) => setFormData({ ...formData, venomous: e.target.value === 'true' })}
                     style={{
@@ -440,10 +450,11 @@ export default function SightingsMap() {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                  <label htmlFor="sighting-danger" style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
                     Danger Level
                   </label>
                   <select
+                    id="sighting-danger"
                     value={formData.dangerLevel}
                     onChange={(e) => setFormData({ ...formData, dangerLevel: e.target.value })}
                     style={{
@@ -466,7 +477,7 @@ export default function SightingsMap() {
 
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>
+                  <label htmlFor="sighting-location" style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>
                     Location Name / Landmark *
                   </label>
                   <button
@@ -488,7 +499,7 @@ export default function SightingsMap() {
                 </div>
                 <input
                   type="text"
-                  placeholder="e.g. Pine Ridge Hiking Trail, Sector 4 Park"
+                  id="sighting-location" placeholder="e.g. Pine Ridge Hiking Trail, Sector 4 Park"
                   value={formData.locationName}
                   onChange={(e) => setFormData({ ...formData, locationName: e.target.value })}
                   required
@@ -505,12 +516,12 @@ export default function SightingsMap() {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                <label htmlFor="sighting-reporter" style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
                   Your Name (Optional)
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Jane Doe (Hiker)"
+                  id="sighting-reporter" placeholder="e.g. Jane Doe (Hiker)"
                   value={formData.reporterName}
                   onChange={(e) => setFormData({ ...formData, reporterName: e.target.value })}
                   style={{
@@ -526,12 +537,12 @@ export default function SightingsMap() {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                <label htmlFor="sighting-notes" style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
                   Field Notes / Snake Behavior
                 </label>
                 <textarea
                   rows="3"
-                  placeholder="Describe size, behavior, warning sounds, or exact spot..."
+                  id="sighting-notes" placeholder="Describe size, behavior, warning sounds, or exact spot..."
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   style={{

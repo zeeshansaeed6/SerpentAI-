@@ -110,6 +110,7 @@ export default function RescueDirectory() {
           </div>
 
           <select
+            aria-label="Filter by country"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             style={{

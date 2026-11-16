@@ -97,7 +97,7 @@ export default function PreventionGuide() {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                      <input type="checkbox" checked={Boolean(isDone)} readOnly />
+                      <input type="checkbox" aria-label={item.rule} checked={Boolean(isDone)} readOnly />
                       <span style={{ fontSize: '0.9rem', fontWeight: 700, color: isDone ? '#34d399' : '#fff' }}>
                         {item.rule}
                       </span>

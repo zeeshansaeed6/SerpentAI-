@@ -133,7 +133,7 @@ export default function QuizSection() {
             </div>
 
             {/* Question */}
-            <h3 style={{ fontSize: '1.35rem', color: '#fff', marginBottom: '1.5rem', lineHeight: 1.4 }}>
+            <h3 aria-level={2} style={{ fontSize: '1.35rem', color: '#fff', marginBottom: '1.5rem', lineHeight: 1.4 }}>
               {currentQ.question}
             </h3>
 

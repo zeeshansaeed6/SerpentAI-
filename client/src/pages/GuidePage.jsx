@@ -91,6 +91,7 @@ export default function GuidePage() {
 
           {/* Venomous Filter */}
           <select
+            aria-label="Filter by toxicity"
             value={venomFilter}
             onChange={(e) => setVenomFilter(e.target.value)}
             style={{
@@ -111,6 +112,7 @@ export default function GuidePage() {
 
           {/* Danger Level Filter */}
           <select
+            aria-label="Filter by danger level"
             value={dangerFilter}
             onChange={(e) => setDangerFilter(e.target.value)}
             style={{

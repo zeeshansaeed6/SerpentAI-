@@ -163,7 +163,7 @@ export default function ResultCard({ result, onScanAgain }) {
                 <Skull size={24} />
               </div>
               <div>
-                <h4 style={{ color: '#f87171', margin: 0, fontSize: '1.1rem' }}>
+                <h4 aria-level={2} style={{ color: '#f87171', margin: 0, fontSize: '1.1rem' }}>
                   VENOMOUS REPTILE DETECTED — {result.dangerLevel?.toUpperCase() || 'DANGEROUS'}
                 </h4>
                 <p style={{ color: '#fca5a5', margin: 0, fontSize: '0.85rem' }}>
@@ -198,7 +198,7 @@ export default function ResultCard({ result, onScanAgain }) {
                 <ShieldCheck size={24} />
               </div>
               <div>
-                <h4 style={{ color: '#34d399', margin: 0, fontSize: '1.1rem' }}>
+                <h4 aria-level={2} style={{ color: '#34d399', margin: 0, fontSize: '1.1rem' }}>
                   NON-VENOMOUS / HARMLESS SPECIES
                 </h4>
                 <p style={{ color: '#a7f3d0', margin: 0, fontSize: '0.85rem' }}>
@@ -372,7 +372,7 @@ export default function ResultCard({ result, onScanAgain }) {
                 padding: '1.2rem',
                 marginBottom: '1.25rem'
               }}>
-                <h4 style={{
+                <h4 aria-level={3} style={{
                   color: isVenomous ? '#f87171' : '#34d399',
                   fontSize: '0.95rem',
                   marginBottom: '0.5rem',

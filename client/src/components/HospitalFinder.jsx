@@ -153,6 +153,7 @@ export default function HospitalFinder() {
           </button>
 
           <select
+            aria-label="Filter by region"
             value={countryFilter}
             onChange={(e) => setCountryFilter(e.target.value)}
             style={{

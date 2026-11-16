@@ -22,6 +22,7 @@ export default function HomePage({ onExploreGuide }) {
         <HeroSection onExploreGuide={onExploreGuide} />
       )}
 
+      {detectionResult && <h1 className="sr-only">Species identification result</h1>}
       {detectionResult ? (
         <ResultCard
           result={detectionResult}

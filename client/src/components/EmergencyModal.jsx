@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { AlertTriangle, PhoneCall, ShieldAlert, X, HeartPulse, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function EmergencyModal({ isOpen, onClose }) {
+  // Escape closes the dialog
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -19,7 +27,7 @@ export default function EmergencyModal({ isOpen, onClose }) {
       zIndex: 9999,
       padding: '1rem'
     }}>
-      <div className="glass-panel" style={{
+      <div className="glass-panel" role="dialog" aria-modal="true" aria-labelledby="emergency-title" style={{
         maxWidth: '680px',
         width: '100%',
         maxHeight: '90vh',
@@ -31,6 +39,7 @@ export default function EmergencyModal({ isOpen, onClose }) {
       }}>
         {/* Close Button */}
         <button
+          aria-label="Close emergency protocol"
           onClick={onClose}
           style={{
             position: 'absolute',
@@ -63,7 +72,7 @@ export default function EmergencyModal({ isOpen, onClose }) {
             <ShieldAlert size={32} />
           </div>
           <div>
-            <h2 style={{ color: '#ef4444', fontSize: '1.5rem', margin: 0 }}>
+            <h2 id="emergency-title" style={{ color: '#ef4444', fontSize: '1.5rem', margin: 0 }}>
               SNAKEBITE EMERGENCY PROTOCOL
             </h2>
             <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
@@ -100,7 +109,7 @@ export default function EmergencyModal({ isOpen, onClose }) {
         </div>
 
         {/* Step-by-Step Immediate Actions */}
-        <h4 style={{ color: '#f8fafc', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h4 aria-level={3} style={{ color: '#f8fafc', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <HeartPulse size={20} color="#34d399" /> Critical First-Aid Steps
         </h4>
         
@@ -112,7 +121,7 @@ export default function EmergencyModal({ isOpen, onClose }) {
             borderRadius: '12px',
             padding: '1rem'
           }}>
-            <h5 style={{ color: '#34d399', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <h5 aria-level={4} style={{ color: '#34d399', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <CheckCircle2 size={18} /> DO THESE IMMEDIATELY
             </h5>
             <ul style={{ fontSize: '0.85rem', color: '#cbd5e1', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -130,7 +139,7 @@ export default function EmergencyModal({ isOpen, onClose }) {
             borderRadius: '12px',
             padding: '1rem'
           }}>
-            <h5 style={{ color: '#f87171', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <h5 aria-level={4} style={{ color: '#f87171', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <XCircle size={18} /> NEVER DO THESE
             </h5>
             <ul style={{ fontSize: '0.85rem', color: '#cbd5e1', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>

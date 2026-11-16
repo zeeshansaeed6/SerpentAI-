@@ -184,7 +184,7 @@ export default function SymptomTriage() {
                     gap: '0.4rem'
                   }}
                 >
-                  <input type="checkbox" checked={localSymptoms[item.key]} readOnly />
+                  <input type="checkbox" aria-label={item.label} checked={localSymptoms[item.key]} readOnly />
                   <span>{item.label}</span>
                 </div>
               ))}
@@ -219,7 +219,7 @@ export default function SymptomTriage() {
                     gap: '0.4rem'
                   }}
                 >
-                  <input type="checkbox" checked={systemicSymptoms[item.key]} readOnly />
+                  <input type="checkbox" aria-label={item.label} checked={systemicSymptoms[item.key]} readOnly />
                   <span>{item.label}</span>
                 </div>
               ))}

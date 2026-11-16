@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Printer, X, FileText, CheckCircle2, ShieldAlert, HeartPulse, MapPin } from 'lucide-react';
 
 export default function MedicalReportModal({ result, isOpen, onClose }) {
-  if (!isOpen || !result) return null;
-
   const [patientName, setPatientName] = useState('');
   const [biteLocation, setBiteLocation] = useState('Right Ankle / Lower Leg');
   const [incidentTime, setIncidentTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
@@ -11,6 +9,17 @@ export default function MedicalReportModal({ result, isOpen, onClose }) {
   const handlePrint = () => {
     window.print();
   };
+
+  // Escape closes the dialog
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
+  // Hooks must run on every render, so this early return comes after them
+  if (!isOpen || !result) return null;
 
   return (
     <div style={{
@@ -27,7 +36,7 @@ export default function MedicalReportModal({ result, isOpen, onClose }) {
       zIndex: 9999,
       padding: '1rem'
     }}>
-      <div className="glass-panel" style={{
+      <div className="glass-panel" role="dialog" aria-modal="true" aria-label="Medical incident report" style={{
         maxWidth: '720px',
         width: '100%',
         maxHeight: '92vh',
@@ -39,6 +48,7 @@ export default function MedicalReportModal({ result, isOpen, onClose }) {
       }}>
         {/* Close Button */}
         <button
+          aria-label="Close medical report"
           onClick={onClose}
           style={{
             position: 'absolute',

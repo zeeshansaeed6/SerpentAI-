@@ -299,7 +299,7 @@ export default function UploadZone({ onDetectionComplete }) {
             }}>
               <UploadCloud size={36} />
             </div>
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: '#fff' }}>
+            <h3 aria-level={2} style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: '#fff' }}>
               Drag & Drop Snake Image Here
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
