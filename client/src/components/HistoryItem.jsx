@@ -44,7 +44,7 @@ export default function HistoryItem({ item, onView, onDelete }) {
               {isVenomous ? 'Venomous' : 'Non-Venomous'}
             </span>
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', marginBottom: '0.2rem' }}>
+          <div className="latin" style={{ fontSize: '0.9rem', color: '#a8bcb1', marginBottom: '0.2rem' }}>
             {item.scientificName}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#64748b' }}>

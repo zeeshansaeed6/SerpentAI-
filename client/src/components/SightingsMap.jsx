@@ -186,7 +186,7 @@ export default function SightingsMap() {
                   <h3 style={{ fontSize: '1.15rem', color: '#fff', margin: 0, fontWeight: 700 }}>
                     {item.speciesName}
                   </h3>
-                  <div style={{ fontSize: '0.8rem', color: '#34d399', fontStyle: 'italic' }}>
+                  <div className="latin" style={{ fontSize: '0.9rem', color: '#6ee7b7' }}>
                     {item.scientificName}
                   </div>
                 </div>

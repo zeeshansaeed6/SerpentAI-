@@ -158,7 +158,7 @@ export default function MedicalReportModal({ result, isOpen, onClose }) {
               <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff' }}>
                 {result.snakeName}
               </div>
-              <div style={{ fontStyle: 'italic', color: '#34d399', fontSize: '0.85rem', marginBottom: '0.4rem' }}>
+              <div className="latin" style={{ color: '#34d399', fontSize: '0.95rem', marginBottom: '0.4rem' }}>
                 {result.scientificName}
               </div>
               <p style={{ color: '#cbd5e1', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>

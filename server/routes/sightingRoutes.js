@@ -15,7 +15,7 @@ const initialSightings = [
     longitude: 74.8567,
     notes: 'Spotted near stream crossing. Maintained 15m distance, was approx 12ft long.',
     reporterName: 'Arun V. (Wildlife Guide)',
-    imageData: 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=400&q=80'
+    imageData: '/samples/king-cobra.jpg'
   },
   {
     speciesName: "Russell's Viper",
@@ -27,7 +27,7 @@ const initialSightings = [
     longitude: 78.6569,
     notes: 'Coiled under agricultural wood pile. Loud hiss heard before sighting.',
     reporterName: 'Karthik S.',
-    imageData: 'https://images.unsplash.com/photo-1563281577-a7be47e20db9?auto=format&fit=crop&w=400&q=80'
+    imageData: ''
   },
   {
     speciesName: 'Corn Snake',
@@ -39,7 +39,7 @@ const initialSightings = [
     longitude: -80.8987,
     notes: 'Sunbathing across gravel bike trail. Very calm demeanor.',
     reporterName: 'Sarah Jenkins',
-    imageData: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=400&q=80'
+    imageData: '/samples/corn-snake.jpg'
   },
   {
     speciesName: 'Green Tree Python',
@@ -51,7 +51,7 @@ const initialSightings = [
     longitude: 143.0855,
     notes: 'Resting wrapped on low branch near camping grounds.',
     reporterName: 'Dave Miller',
-    imageData: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=400&q=80'
+    imageData: '/samples/green-tree-python.jpg'
   },
   {
     speciesName: 'Eastern Diamondback Rattlesnake',
@@ -63,7 +63,7 @@ const initialSightings = [
     longitude: -81.8236,
     notes: 'Active rattle warning while hiking trail. Retreated safely.',
     reporterName: 'Mike R.',
-    imageData: 'https://images.unsplash.com/photo-1563281577-a7be47e20db9?auto=format&fit=crop&w=400&q=80'
+    imageData: ''
   }
 ];
 

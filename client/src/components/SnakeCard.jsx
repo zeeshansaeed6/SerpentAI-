@@ -27,7 +27,7 @@ export default function SnakeCard({ snake }) {
           <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff', margin: 0 }}>
             {snake.name}
           </h3>
-          <div style={{ fontSize: '0.8rem', fontStyle: 'italic', color: '#34d399' }}>
+          <div className="latin" style={{ fontSize: '0.92rem', color: '#6ee7b7' }}>
             {snake.scientificName}
           </div>
         </div>

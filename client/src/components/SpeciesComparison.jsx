@@ -165,7 +165,7 @@ export default function SpeciesComparison() {
               <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: 0 }}>
                 {pair.snakeA.name}
               </h3>
-              <div style={{ fontStyle: 'italic', color: '#f87171', fontSize: '0.85rem' }}>
+              <div className="latin" style={{ color: '#f87171', fontSize: '0.95rem' }}>
                 {pair.snakeA.scientificName}
               </div>
             </div>
@@ -224,7 +224,7 @@ export default function SpeciesComparison() {
               <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: 0 }}>
                 {pair.snakeB.name}
               </h3>
-              <div style={{ fontStyle: 'italic', color: '#34d399', fontSize: '0.85rem' }}>
+              <div className="latin" style={{ color: '#6ee7b7', fontSize: '0.95rem' }}>
                 {pair.snakeB.scientificName}
               </div>
             </div>
