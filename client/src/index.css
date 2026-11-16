@@ -215,8 +215,8 @@ textarea::placeholder {
 
 .glass-panel {
   background: var(--bg-glass);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md), inset 0 1px 0 var(--highlight);
@@ -229,8 +229,8 @@ textarea::placeholder {
 
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm), inset 0 1px 0 var(--highlight);
@@ -506,6 +506,64 @@ header.glass-panel {
   0%   { top: 0%;  opacity: 0.85; }
   50%  { opacity: 1; }
   100% { top: 98%; opacity: 0.85; }
+}
+
+/* Hero serpents: two thermal strokes travelling along one path (pathLength normalised to 1000) */
+.hero-serpent {
+  position: absolute;
+  left: 50%;
+  top: -24px;
+  width: min(1180px, 140%);
+  height: 320px;
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.6;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+}
+
+.serpent-trail,
+.serpent-body {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.serpent-trail {
+  stroke: rgba(52, 211, 153, 0.14);
+  stroke-width: 1.5;
+}
+
+/* Glow is a wider, translucent twin stroke: a drop-shadow filter would repaint every frame */
+.serpent-glow {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke: url(#hero-thermal);
+  stroke-width: 11;
+  stroke-linecap: round;
+  stroke-dasharray: 120 880;
+  opacity: 0.16;
+  animation: slither 12s linear infinite;
+}
+
+.serpent-body {
+  stroke: url(#hero-thermal);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 120 880;
+  animation: slither 12s linear infinite;
+}
+
+.serpent-body--slow {
+  stroke-width: 2;
+  stroke-dasharray: 70 930;
+  opacity: 0.7;
+  animation-duration: 19s;
+  animation-direction: reverse;
+}
+
+@keyframes slither {
+  to { stroke-dashoffset: -1000; }
 }
 
 /* Utility animations referenced by components (spinners, loading pulses) */
