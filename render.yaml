@@ -1,0 +1,19 @@
+# Render Blueprint: one web service that serves the API and the built React app.
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repo, then fill in the two secrets.
+services:
+  - type: web
+    name: serpentai
+    runtime: node
+    plan: free # free instances sleep after ~15 min idle (first request is slow); use a paid plan for always-on
+    buildCommand: npm run install-all && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: DATABASE_URL # Supabase "Session pooler" connection string (URL-encode special chars in the password)
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

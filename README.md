@@ -113,6 +113,10 @@ Runs 38 integration checks (all API routes, filters, validation, SQL-injection s
 ### Option A — one service (recommended)
 The Express server serves the built React app and the API from the same origin, so there is no CORS or API-URL setup.
 
+**On Render the fastest way is the included Blueprint** ([`render.yaml`](render.yaml)): *New → Blueprint → select this repo*, then paste your `DATABASE_URL` and `GEMINI_API_KEY` when prompted. Free instances sleep after ~15 minutes idle, so the first visit after a quiet spell is slow. A paid plan stays awake.
+
+The manual settings below are the same thing by hand.
+
 | Step | Command / value |
 | --- | --- |
 | Build command | `npm run install-all && npm run build` |

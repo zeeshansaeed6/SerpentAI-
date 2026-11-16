@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      # Integration tests run against an in-memory Postgres: no secrets or database needed
+      - name: Server tests
+        working-directory: server
+        run: |
+          npm ci
+          npm test
+
+      - name: Client build
+        working-directory: client
+        run: |
+          npm ci
+          npm run build
