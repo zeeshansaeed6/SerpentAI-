@@ -185,7 +185,7 @@ export default function UploadZone({ onDetectionComplete }) {
   return (
     <div style={{ maxWidth: '850px', margin: '0 auto' }}>
       {/* Upload Panel */}
-      <div className="glass-panel" style={{
+      <div className="glass-panel hud-corners" style={{
         padding: '2rem',
         borderRadius: '24px',
         position: 'relative',

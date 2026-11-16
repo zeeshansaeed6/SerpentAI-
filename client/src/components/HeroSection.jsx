@@ -16,11 +16,15 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
         alignItems: 'center',
         gap: '0.5rem',
         padding: '0.4rem 1rem',
-        background: 'rgba(16, 185, 129, 0.12)',
-        border: '1px solid rgba(16, 185, 129, 0.3)',
+        background: 'rgba(34, 211, 238, 0.1)',
+        border: '1px solid rgba(34, 211, 238, 0.35)',
+        boxShadow: '0 0 20px rgba(34, 211, 238, 0.12)',
         borderRadius: '999px',
-        fontSize: '0.85rem',
-        color: '#34d399',
+        fontFamily: 'var(--font-mono)',
+        letterSpacing: '0.04em',
+        textTransform: 'uppercase',
+        fontSize: '0.74rem',
+        color: '#67e8f9',
         fontWeight: 600,
         marginBottom: '1.5rem'
       }}>
@@ -49,7 +53,7 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
       </p>
 
       {/* Stats bar */}
-      <div className="glass-panel" style={{
+      <div className="glass-panel hud-corners" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
         gap: '1.5rem',
