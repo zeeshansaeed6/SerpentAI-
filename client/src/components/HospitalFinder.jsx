@@ -10,6 +10,7 @@ export default function HospitalFinder() {
   const [countryFilter, setCountryFilter] = useState('all');
   const [userLocation, setUserLocation] = useState(null);
   const [gpsStatus, setGpsStatus] = useState('');
+  const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
     fetchHospitals();
@@ -18,6 +19,7 @@ export default function HospitalFinder() {
   const fetchHospitals = async () => {
     try {
       setLoading(true);
+      setLoadFailed(false);
       const params = {};
       if (search.trim()) params.query = search.trim();
       if (countryFilter !== 'all') params.country = countryFilter;
@@ -39,6 +41,7 @@ export default function HospitalFinder() {
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch hospitals:', err);
+      setLoadFailed(true);
       setLoading(false);
     }
   };
@@ -148,10 +151,25 @@ export default function HospitalFinder() {
           <div>Scanning regional antivenom inventories...</div>
         </div>
       ) : hospitals.length === 0 ? (
-        <div className="glass-panel" style={{ textAlign: 'center', padding: '3rem', borderRadius: '16px' }}>
-          <p style={{ color: '#94a3b8', fontSize: '1rem', margin: 0 }}>
-            No hospitals found matching your search. Try changing search keywords.
-          </p>
+        <div className="glass-panel" role={loadFailed ? 'alert' : undefined} style={{ textAlign: 'center', padding: '3rem', borderRadius: '16px' }}>
+          {loadFailed ? (
+            <>
+              <AlertCircle size={28} style={{ color: '#f87171', margin: '0 auto 0.75rem' }} />
+              <p style={{ color: '#e8f1fb', fontSize: '1rem', margin: '0 0 0.35rem', fontWeight: 600 }}>
+                Couldn't load the hospital list.
+              </p>
+              <p style={{ color: '#a8bcb1', fontSize: '0.9rem', margin: '0 0 1.25rem' }}>
+                Check your connection. In an emergency, call your local emergency number (911 / 112 / 108) now.
+              </p>
+              <button className="btn btn-secondary" onClick={fetchHospitals}>
+                <RefreshCw size={16} /> Try again
+              </button>
+            </>
+          ) : (
+            <p style={{ color: '#94a3b8', fontSize: '1rem', margin: 0 }}>
+              No hospitals found matching your search. Try changing search keywords.
+            </p>
+          )}
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>

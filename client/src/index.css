@@ -508,6 +508,19 @@ header.glass-panel {
   100% { top: 98%; opacity: 0.85; }
 }
 
+/* Utility animations referenced by components (spinners, loading pulses) */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+.animate-spin  { animation: spin 0.9s linear infinite; }
+.animate-pulse { animation: soft-pulse 1.8s ease-in-out infinite; }
+
 .scanner-overlay {
   position: absolute;
   inset: 0;
