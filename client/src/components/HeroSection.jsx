@@ -6,6 +6,7 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
     <div style={{
       textAlign: 'center',
       padding: '3rem 1rem 2rem',
+      width: '100%', // auto margins in a flex column stop stretching; without this it overflows on phones
       maxWidth: '900px',
       margin: '0 auto'
     }}>
@@ -50,10 +51,11 @@ export default function HeroSection({ onStartScan, onExploreGuide }) {
       {/* Stats bar */}
       <div className="glass-panel" style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
         gap: '1.5rem',
         padding: '1.25rem 1.5rem',
-        maxWidth: '750px',
+        width: '100%',
+        maxWidth: '850px',
         margin: '0 auto',
         borderRadius: '16px'
       }}>

@@ -1,29 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { UploadCloud, Camera, RefreshCw, Sparkles, Image as ImageIcon, AlertCircle, Video, CheckCircle, Sliders, Sun, Moon } from 'lucide-react';
 import { detectSnake } from '../services/api';
+import { prepareImage } from '../utils/prepareImage';
 
-// High-quality royalty-free demo snake images for 1-click test
+// Demo snake images for 1-click test, bundled in public/samples (no external hosts, CORS or rate limits)
 const SAMPLE_SNAKES = [
-  {
-    name: 'King Cobra (Deadly)',
-    url: 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=800&q=80',
-    type: 'Venomous'
-  },
-  {
-    name: 'Corn Snake (Harmless)',
-    url: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=800&q=80',
-    type: 'Non-Venomous'
-  },
-  {
-    name: 'Green Tree Python',
-    url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
-    type: 'Harmless'
-  },
-  {
-    name: 'Viper / Rattlesnake',
-    url: 'https://images.unsplash.com/photo-1563281577-a7be47e20db9?auto=format&fit=crop&w=800&q=80',
-    type: 'Dangerous'
-  }
+  { name: 'King Cobra (Deadly)', url: '/samples/king-cobra.jpg', type: 'Venomous' },
+  { name: 'Corn Snake (Harmless)', url: '/samples/corn-snake.jpg', type: 'Non-Venomous' },
+  { name: 'Green Tree Python', url: '/samples/green-tree-python.jpg', type: 'Harmless' }
 ];
 
 export default function UploadZone({ onDetectionComplete }) {
@@ -167,7 +151,7 @@ export default function UploadZone({ onDetectionComplete }) {
       setUploadProgress(10);
 
       const formData = new FormData();
-      formData.append('image', selectedFile);
+      formData.append('image', await prepareImage(selectedFile, { brightness, contrast }));
 
       const response = await detectSnake(formData, (progressEvent) => {
         const percent = Math.round((progressEvent.loaded * 70) / progressEvent.total);

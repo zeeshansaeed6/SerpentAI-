@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { 
   Camera, BookOpen, History, Award, AlertCircle, Menu, X, 
-  Radio, ArrowRightLeft, Hospital, Activity, Bot, HeartPulse, Home, Shield, Globe 
+  Radio, ArrowRightLeft, Hospital, Activity, Bot, HeartPulse, Home, Shield
 } from 'lucide-react';
 import EmergencyModal from './EmergencyModal';
 
-export default function Navbar({ activeTab, setActiveTab, currentLang, setCurrentLang }) {
+export default function Navbar({ activeTab, setActiveTab }) {
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -68,7 +68,7 @@ export default function Navbar({ activeTab, setActiveTab, currentLang, setCurren
                 border: '1px solid rgba(16, 185, 129, 0.3)'
               }}>Ultra</span>
             </div>
-            <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>AI Wildlife & Antivenom Network</div>
+            <div className="brand-tagline" style={{ fontSize: '0.68rem', color: '#94a3b8' }}>AI Wildlife & Antivenom Network</div>
           </div>
         </div>
 
@@ -78,7 +78,7 @@ export default function Navbar({ activeTab, setActiveTab, currentLang, setCurren
           alignItems: 'center',
           gap: '0.25rem',
           overflowX: 'auto',
-          maxWidth: '860px',
+          maxWidth: '100%',
           padding: '0 0.5rem'
         }} className="desktop-nav">
           {navItems.map((item) => {
@@ -88,6 +88,9 @@ export default function Navbar({ activeTab, setActiveTab, currentLang, setCurren
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
+                className={isActive ? 'nav-btn active' : 'nav-btn'}
+                title={item.label}
+                aria-current={isActive ? 'page' : undefined}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -105,34 +108,14 @@ export default function Navbar({ activeTab, setActiveTab, currentLang, setCurren
                 }}
               >
                 <Icon size={14} />
-                {item.label}
+                <span className="nav-label">{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Emergency SOS Button + Language Switcher */}
+        {/* Emergency SOS Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
-          {/* Language Switcher */}
-          <select
-            value={currentLang}
-            onChange={(e) => setCurrentLang(e.target.value)}
-            style={{
-              padding: '0.4rem 0.6rem',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid var(--border-glass)',
-              borderRadius: '8px',
-              color: '#cbd5e1',
-              fontSize: '0.75rem',
-              outline: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            <option value="en">🇺🇸 EN</option>
-            <option value="hi">🇮🇳 हिंदी</option>
-            <option value="es">🇪🇸 ES</option>
-          </select>
-
           <button
             onClick={() => setIsEmergencyOpen(true)}
             className="btn btn-danger"

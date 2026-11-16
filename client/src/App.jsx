@@ -15,17 +15,11 @@ import RescueDirectory from './components/RescueDirectory';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('scanner');
-  const [currentLang, setCurrentLang] = useState('en');
 
   return (
     <div className="app-container">
       {/* Navigation Header */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        currentLang={currentLang}
-        setCurrentLang={setCurrentLang}
-      />
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main Content View based on activeTab */}
       <main className="main-content">
