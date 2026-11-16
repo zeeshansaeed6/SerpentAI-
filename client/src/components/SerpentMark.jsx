@@ -11,12 +11,14 @@ export default function SerpentMark({ size = 24 }) {
         </linearGradient>
       </defs>
       <path
+        className="mark-body"
+        pathLength="1"
         d="M21.5 6.5c-5.5-2.8-12.5-.2-11.5 4.7 1 4.8 9.2 4.4 12 8.6 2.4 3.6-3.6 7.4-10.5 5.2"
         stroke="url(#serpent-mark-grad)"
         strokeWidth="3.4"
         strokeLinecap="round"
       />
-      <circle cx="22.6" cy="6.9" r="1.5" fill="#fb923c" />
+      <circle className="mark-eye" cx="22.6" cy="6.9" r="1.5" fill="#fb923c" />
     </svg>
   );
 }

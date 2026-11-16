@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { 
   Camera, BookOpen, History, Award, AlertCircle, Menu, X, 
   Radio, ArrowRightLeft, Hospital, Activity, Bot, HeartPulse, Home, Shield
@@ -6,9 +8,39 @@ import {
 import EmergencyModal from './EmergencyModal';
 import SerpentMark from './SerpentMark';
 
+gsap.registerPlugin(useGSAP);
+
 export default function Navbar({ activeTab, setActiveTab }) {
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const indicatorRef = useRef(null);
+
+  // Thermal underline that glides to the active tab
+  useGSAP(() => {
+    const move = (duration) => {
+      const active = navRef.current?.querySelector('.nav-btn.active');
+      if (!active) return;
+      gsap.to(indicatorRef.current, {
+        x: active.offsetLeft,
+        width: active.offsetWidth,
+        duration,
+        ease: 'power3.out',
+        overwrite: true
+      });
+    };
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // wait one frame: the active tab's label (and so its width) changes with this render
+    const frame = requestAnimationFrame(() => move(reduced ? 0 : 0.55));
+    const onResize = () => move(0);
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', onResize);
+    };
+  }, { dependencies: [activeTab], scope: navRef });
 
   const navItems = [
     { id: 'scanner', label: 'AI Scanner', icon: Camera },
@@ -78,7 +110,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
         </div>
 
         {/* Desktop Nav Items */}
-        <nav style={{
+        <nav ref={navRef} style={{
+          position: 'relative',
           display: 'flex',
           alignItems: 'center',
           gap: '0.25rem',
@@ -86,6 +119,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
           maxWidth: '100%',
           padding: '0 0.5rem'
         }} className="desktop-nav">
+          <span ref={indicatorRef} className="nav-indicator" aria-hidden="true" />
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;

@@ -13,9 +13,11 @@ import SymptomTriage from './components/SymptomTriage';
 import PreventionGuide from './components/PreventionGuide';
 import RescueDirectory from './components/RescueDirectory';
 import SerpentMark from './components/SerpentMark';
+import { usePointerGlow } from './hooks/usePointerGlow';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('scanner');
+  usePointerGlow();
 
   // Always land at the top of the new view
   const goToTab = (tab) => {
