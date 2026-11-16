@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { Hospital, PhoneCall, MapPin, CheckCircle2, ShieldAlert, Navigation, Search, RefreshCw, AlertCircle, Crosshair } from 'lucide-react';
 import { getHospitals } from '../services/api';
 import { calculateDistance } from '../utils/distance';
+
+// The map ships ~100KB of country geometry: load it only when this tab is opened
+const WorldMap = lazy(() => import('./WorldMap'));
 
 export default function HospitalFinder() {
   const [hospitals, setHospitals] = useState([]);
@@ -11,6 +14,33 @@ export default function HospitalFinder() {
   const [userLocation, setUserLocation] = useState(null);
   const [gpsStatus, setGpsStatus] = useState('');
   const [loadFailed, setLoadFailed] = useState(false);
+  const [highlightId, setHighlightId] = useState(null);
+
+  const markers = useMemo(
+    () => hospitals
+      .filter((h) => Number.isFinite(h.lat) && Number.isFinite(h.lng))
+      .map((h) => ({
+        id: h.id,
+        lat: h.lat,
+        lng: h.lng,
+        level: 'hospital',
+        title: h.name,
+        subtitle: `${h.city}, ${h.country}${h.calculatedDistance ? ` · ~${h.calculatedDistance} km away` : ''}`
+      })),
+    [hospitals]
+  );
+
+  // Clicking a marker scrolls to its card and flashes it
+  const handleSelectMarker = (id) => {
+    setHighlightId(id);
+    document.getElementById(`hospital-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  useEffect(() => {
+    if (!highlightId) return undefined;
+    const timer = setTimeout(() => setHighlightId(null), 1800);
+    return () => clearTimeout(timer);
+  }, [highlightId]);
 
   useEffect(() => {
     fetchHospitals();
@@ -144,6 +174,20 @@ export default function HospitalFinder() {
         </div>
       </div>
 
+      {/* Map of antivenom centres (and you, once GPS is on). Every centre is also listed below. */}
+      {!loading && markers.length > 0 && (
+        <Suspense fallback={<div className="glass-panel map-skeleton animate-pulse">Loading map…</div>}>
+          <WorldMap
+            markers={markers}
+            user={userLocation}
+            legend="hospital"
+            selectedId={highlightId}
+            onSelect={handleSelectMarker}
+            ariaLabel="Map of antivenom centres. Every centre is also listed below."
+          />
+        </Suspense>
+      )}
+
       {/* Hospital Cards Grid */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
@@ -176,7 +220,8 @@ export default function HospitalFinder() {
           {hospitals.map((hosp) => (
             <div
               key={hosp.id}
-              className="glass-card"
+              id={`hospital-${hosp.id}`}
+              className={`glass-card${highlightId === hosp.id ? ' is-highlight' : ''}`}
               style={{
                 padding: '1.5rem',
                 borderRadius: '18px',

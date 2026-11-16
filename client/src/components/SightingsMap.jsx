@@ -1,12 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { MapPin, Plus, AlertCircle, Skull, ShieldCheck, Calendar, User, RefreshCw, X, Radio, Camera } from 'lucide-react';
 import { getSightings, createSighting, deleteSighting } from '../services/api';
+import { SEVERITY, severityOf } from '../utils/severity';
+import SeverityGlyph from './SeverityGlyph';
+
+// The map ships ~100KB of country geometry: load it only when this tab is opened
+const WorldMap = lazy(() => import('./WorldMap'));
+
+const levelOf = (sighting) => severityOf(sighting.dangerLevel || (sighting.venomous ? 'Dangerous' : 'Harmless')).level;
+
+// (0, 0) is what the API stores when a report has no coordinates: don't plot it as "Null Island"
+const hasCoordinates = (s) =>
+  Number.isFinite(s.latitude) && Number.isFinite(s.longitude) && !(s.latitude === 0 && s.longitude === 0);
 
 export default function SightingsMap() {
   const [sightings, setSightings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [levelFilter, setLevelFilter] = useState('all');
+  const [highlightId, setHighlightId] = useState(null);
+
+  const levelCounts = useMemo(() => {
+    const counts = Object.fromEntries(SEVERITY.map((s) => [s.level, 0]));
+    sightings.forEach((s) => { counts[levelOf(s)] += 1; });
+    return counts;
+  }, [sightings]);
+
+  // One filter scopes both the map and the list below it
+  const visible = useMemo(
+    () => (levelFilter === 'all' ? sightings : sightings.filter((s) => levelOf(s) === levelFilter)),
+    [sightings, levelFilter]
+  );
+
+  const markers = useMemo(
+    () => visible.filter(hasCoordinates).map((s) => ({
+      id: s._id,
+      lat: s.latitude,
+      lng: s.longitude,
+      level: levelOf(s),
+      title: s.speciesName,
+      subtitle: s.locationName
+    })),
+    [visible]
+  );
+
+  const unlocated = visible.length - markers.length;
+
+  // Clicking a marker scrolls to its report and flashes the card
+  const handleSelectMarker = (id) => {
+    setHighlightId(id);
+    document.getElementById(`sighting-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  useEffect(() => {
+    if (!highlightId) return undefined;
+    const timer = setTimeout(() => setHighlightId(null), 1800);
+    return () => clearTimeout(timer);
+  }, [highlightId]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -143,6 +194,42 @@ export default function SightingsMap() {
         </div>
       </div>
 
+      {/* Danger radar: one severity filter row scoping the map and the report list */}
+      {!loading && sightings.length > 0 && (
+        <>
+          <div className="sev-filter" role="group" aria-label="Filter sightings by danger level">
+            <button type="button" className="sev-chip" aria-pressed={levelFilter === 'all'} onClick={() => setLevelFilter('all')}>
+              All <strong>{sightings.length}</strong>
+            </button>
+            {SEVERITY.map((s) => (
+              <button
+                key={s.level}
+                type="button"
+                className="sev-chip"
+                aria-pressed={levelFilter === s.level}
+                onClick={() => setLevelFilter(s.level)}
+              >
+                <SeverityGlyph level={s.level} /> {s.level} <strong>{levelCounts[s.level]}</strong>
+              </button>
+            ))}
+          </div>
+
+          <Suspense fallback={<div className="glass-panel map-skeleton animate-pulse">Loading map…</div>}>
+            <WorldMap
+              markers={markers}
+              selectedId={highlightId}
+              onSelect={handleSelectMarker}
+              ariaLabel="Map of community snake sightings. Every sighting is also listed below."
+            />
+          </Suspense>
+
+          {visible.length === 0 && <p className="map-note">No sightings at this danger level yet.</p>}
+          {unlocated > 0 && (
+            <p className="map-note">{unlocated} report{unlocated > 1 ? 's have' : ' has'} no coordinates and appear{unlocated > 1 ? '' : 's'} in the list only.</p>
+          )}
+        </>
+      )}
+
       {/* Sightings Feed */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
@@ -157,10 +244,11 @@ export default function SightingsMap() {
         </div>
       ) : (
         <div className="grid-responsive">
-          {sightings.map((item) => (
+          {visible.map((item) => (
             <div
               key={item._id}
-              className="glass-card"
+              id={`sighting-${item._id}`}
+              className={`glass-card${highlightId === item._id ? ' is-highlight' : ''}`}
               style={{
                 padding: '1.25rem',
                 display: 'flex',

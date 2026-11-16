@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, RefreshCw, BookOpen, Skull, ShieldCheck } from 'lucide-react';
 import SnakeCard from '../components/SnakeCard';
+import SpeciesInsights from '../components/SpeciesInsights';
 import { getSnakes } from '../services/api';
 
 export default function GuidePage() {
@@ -131,6 +132,9 @@ export default function GuidePage() {
           </select>
         </div>
       </div>
+
+      {/* Overview of whatever the search and filters above currently show */}
+      {!loading && <SpeciesInsights snakes={snakes} />}
 
       {/* Grid of Snake Cards */}
       {loading ? (

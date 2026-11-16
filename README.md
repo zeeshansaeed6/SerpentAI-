@@ -34,6 +34,10 @@ An intelligent, full-stack web platform (React + Express + Supabase/PostgreSQL) 
 
 * **📡 Community Danger Radar**:
   * Crowdsourced geo-tagged reptile sighting log with GPS auto-detection to warn nearby hikers and residents.
+  * Interactive world map (bundled geometry, no map-tile service): danger-level markers with distinct shapes, region zoom, tooltips, keyboard support, and a danger-level filter that scopes the map and the report list together. The hospital finder shows antivenom centres (and your GPS position) on the same map.
+
+* **📊 Species Insights** (Encyclopedia):
+  * KPI tiles plus ordered/ranked bar charts for danger level, family and venomous split. It follows your search and filters, and has a table view for screen readers.
 
 * **🔀 Side-by-Side Mimic Analyzer**:
   * Side-by-side comparison of dangerous venomous snakes vs harmless lookalike mimics (e.g. *Coral Snake vs Scarlet Kingsnake*).
